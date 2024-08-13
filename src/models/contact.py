@@ -26,7 +26,7 @@ class Contact:
         self.__phone_number: str = phone_number
         self.__email: str = email
         self.__birthday: str = birthday
-        
+
         # Validate phone number and email
         self._validate_phone_number(phone_number)
         self._validate_email(email)

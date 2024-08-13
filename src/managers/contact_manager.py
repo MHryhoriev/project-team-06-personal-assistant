@@ -35,7 +35,7 @@ class ContactManager:
             if existing_contact.name == contact.name:
                 print(f"Contact with the name {contact.name} already exists.")
                 return
-        
+
         # Add the new contact
         self.contacts.append(contact)
         print(f"Contact {contact.name} successfully added.")
@@ -44,29 +44,40 @@ class ContactManager:
         """
         Removes a contact from the list by name.
         """
-        raise NotImplementedError("The 'remove_contact' method is not implemented.")
+        # Find and remove the contact by name
+        for existing_contact in self.contacts:
+            if existing_contact.name == name:
+                self.contacts.remove(existing_contact)
+                print(f"Contact with the name {name} successfully removed.")
+                return
+        print(f"No contact found with the name {name}.")
 
     def edit_contact(self, name: str, updated_contact: Contact) -> None:
         """
         Changes information about a contact.
         """
-        raise NotImplementedError("The 'edit_contact' method is not implemented.")
+        # Find and update the contact by name
+        for idx, existing_contact in enumerate(self.contacts):
+            if existing_contact.name == name:
+                self.contacts[idx] = updated_contact
+                print(f"Contact with the name {name} successfully updated.")
+                return
+        print(f"No contact found with the name {name}.")
 
     def search_by_name(self, name: str) -> List[Contact]:
         """
         Search for contacts by name.
         """
-        raise NotImplementedError("The 'search_by_name' method is not implemented.")
+        return [contact for contact in self.contacts if contact.name == name]
 
     def search_by_email(self, email: str) -> List[Contact]:
         """
         Search for contacts by email.
         """
-        raise NotImplementedError("The 'search_by_email' method is not implemented.")
+        return [contact for contact in self.contacts if contact.email == email]
 
     def search_by_phone_number(self, phone_number: str) -> List[Contact]:
         """
         Search for contacts by phone number.
         """
-        raise NotImplementedError("The 'search_by_phone_number' method is not implemented.")
-
+        return [contact for contact in self.contacts if contact.phone_number == phone_number]
