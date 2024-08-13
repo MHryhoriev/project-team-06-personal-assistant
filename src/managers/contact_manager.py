@@ -94,7 +94,13 @@ class ContactManager:
         """
         Search for contacts by email.
         """
-        raise NotImplementedError("The 'search_by_email' method is not implemented.")
+        matching_contacts = []
+        #search for contacts with matching email
+        for contacts in self.contacts:
+            if email in contact.email:
+                matching_contacts.append(contact)
+        # retrun the list of matching contacts        
+        return matching_contacts
 
     def search_by_phone_number(self, phone_number: str) -> List[Contact]:
         """
