@@ -91,14 +91,16 @@ class Contact:
         """
         Validates the phone number format.
         """
-        pattern = r'^\+?[1-9]\d{1,14}$'  # Example pattern for international phone numbers
+        pattern = r'^(?:\+380|0)[\d]{9,12}$'  # Example pattern for Ukrainian numbers
         if not re.match(pattern, phone_number):
-            raise ValueError(f"Invalid phone number: {phone_number}")
+            raise ValueError(f"Invalid phone number: {phone_number}. Expected format: +380XXXXXXXXX or 0XXXXXXXXX")
 
     def _validate_email(self, email: str) -> None:
         """
         Validates the email address format.
         """
-        pattern = r'^[\w\.-]+@[\w\.-]+\.\w+$'  # Basic pattern for email validation
+        if not email:
+            raise ValueError("Email address cannot be empty.")
+        pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'  # Updated pattern for email validation
         if not re.match(pattern, email):
-            raise ValueError(f"Invalid email address: {email}")
+            raise ValueError(f"Invalid email address: {email}. Expected format: example@domain.com")
