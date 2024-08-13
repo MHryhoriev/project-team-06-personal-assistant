@@ -16,17 +16,19 @@ updated_at (Date): Date and time the note was last updated.
 
 
 from datetime import datetime
-from contact import Contact  # Assume Contact class is defined in 'contact.py'
-from types import Optional
+from dataclasses import dataclass, asdict, field
 
+from models.contact import Contact  # Assume Contact class is defined in 'contact.py'
+
+@dataclass
 class Note:
-    def __init__(self, id: int, title: str, contact: Contact, content: str, created_at: Optional[datetime] = None, updated_at: Optional[datetime] = None) -> None:
-        self.id: int = id
-        self.title: str = title
-        self.contact: Contact = contact
-        self.content: str = content
-        self.created_at: datetime = created_at if created_at is not None else datetime.now()
-        self.updated_at: datetime = updated_at if updated_at is not None else datetime.now()
+    
+    id: int = 0
+    title: str = ""
+    contact: Contact = None
+    content: str = ""
+    created_at: datetime = field(default_factory=datetime.now)
+    updated_at:datetime = field(default_factory=datetime.now)
 
     def update_content(self, new_content: str) -> None:
         """
@@ -36,5 +38,4 @@ class Note:
         self.updated_at = datetime.now()
 
     def __repr__(self) -> str:
-        return (f"Note(id={self.id}, title='{self.title}', contact={self.contact}, "
-                f"content='{self.content}', created_at={self.created_at}, updated_at={self.updated_at})")
+        return str(asdict(self))
