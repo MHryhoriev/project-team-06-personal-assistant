@@ -19,6 +19,7 @@ search_by_email(email: str): Search for prospects by email.
 search_by_phone_number(phone_number: str): Search for contacts by phone number.
 """
 
+import re
 from typing import List
 from models import Contact  # Assume Contact class is defined in 'contact.py'
 
@@ -55,9 +56,32 @@ class ContactManager:
 
     def search_by_name(self, name: str) -> List[Contact]:
         """
-        Search for contacts by name.
+        Searches for contacts by name or part of the name.
+
+        Parameters:
+            name (str): The name or part of the name to search for.
+
+        Returns:
+            List[Contact]: A list of contacts that match the search query.
+
+        Raises:
+            ValueError: If the name parameter is empty.
+            RuntimeError: If there is an unexpected error during the search.
         """
-        raise NotImplementedError("The 'search_by_name' method is not implemented.")
+        try:
+            if not name.strip():
+                raise ValueError("Search name cannot be empty.")
+            
+            pattern = re.compile(re.escape(name), re.IGNORECASE)
+            matching_contacts = [contact for contact in self.contacts if pattern.search(contact.name)]
+            
+            return matching_contacts
+        
+        except re.error as e:
+            raise RuntimeError(f"An error occurred while processing the search pattern: {e}")
+        
+        except Exception as e:
+            raise RuntimeError(f"An unexpected error occurred during the search: {e}")
 
     def search_by_email(self, email: str) -> List[Contact]:
         """
