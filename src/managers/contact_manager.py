@@ -32,10 +32,11 @@ class ContactManager:
         Adds a new contact to the list.
         """
         # Check if contact with the same name already exists
-        for existing_contact in self.contacts:
-            if existing_contact.name == contact.name:
-                print(f"Contact with the name '{contact.name}' already exists.")
-                return
+        if self.contacts: # Skip if list is empty
+            for existing_contact in self.contacts:
+                if existing_contact.name == contact.name:
+                    print(f"Contact with the name '{contact.name}' already exists.")
+                    return
         
         # Add the new contact to the list
         self.contacts.append(contact)
@@ -67,6 +68,23 @@ class ContactManager:
 
     def search_by_phone_number(self, phone_number: str) -> List[Contact]:
         """
-        Search for contacts by phone number.
+        Search for contacts by phone number (exact or partial match).
+
+        Parameters:
+        - contacts (list of dict): A list of contacts, where each contact is represented by a dictionary with 'name' and 'phone' keys.
+        - phone_number (str): The phone number or part of the phone number to be searched.
+
+        Returns:
+        - list of dict: A list of contacts whose phone numbers match the search query.
         """
-        raise NotImplementedError("The 'search_by_phone_number' method is not implemented.")
+        # Initialize an empty list to hold matching contacts
+        matching_contacts = []
+
+        # Iterate over each contact in the contacts list
+        if self.contacts: # Skip if list is empty
+            for contact in self.contacts:
+                # Check if the phone number part of the contact matches the search query
+                if str(phone_number) in contact.phone_number:
+                    matching_contacts.append(contact)
+
+        return matching_contacts
