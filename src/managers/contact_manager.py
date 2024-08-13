@@ -52,7 +52,17 @@ class ContactManager:
         """
         Changes information about a contact.
         """
-        raise NotImplementedError("The 'edit_contact' method is not implemented.")
+        for i, contact in enumerate(self.contacts):
+            if contact.name == name:
+                #Update contact information
+                self.contacts[i] = updated_contact
+                print(f"Contact '{name} updated successfully.")
+                return
+            #if not found
+        print(f"Error: Contact with name '{name}' not found.")
+
+
+        
 
     def search_by_name(self, name: str) -> List[Contact]:
         """
