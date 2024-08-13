@@ -19,18 +19,27 @@ search_by_email(email: str): Search for prospects by email.
 search_by_phone_number(phone_number: str): Search for contacts by phone number.
 """
 
-from typing import List, Optional
+from typing import List
 from models import Contact  # Assume Contact class is defined in 'contact.py'
 
 class ContactManager:
     def __init__(self) -> None:
+        # Initialize an empty list of contacts
         self.contacts: List[Contact] = []
 
     def add_contact(self, contact: Contact) -> None:
         """
         Adds a new contact to the list.
         """
-        raise NotImplementedError("The 'add_contact' method is not implemented.")
+        # Check if contact with the same name already exists
+        for existing_contact in self.contacts:
+            if existing_contact.name == contact.name:
+                print(f"Contact with the name '{contact.name}' already exists.")
+                return
+        
+        # Add the new contact to the list
+        self.contacts.append(contact)
+        print(f"Contact '{contact.name}' successfully added.")
 
     def remove_contact(self, name: str) -> None:
         """
@@ -60,4 +69,4 @@ class ContactManager:
         """
         Search for contacts by phone number.
         """
-        raise NotImplementedError("The 'search_by_phone_number' method is not implemented.")    
+        raise NotImplementedError("The 'search_by_phone_number' method is not implemented.")
