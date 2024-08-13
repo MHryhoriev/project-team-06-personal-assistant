@@ -35,7 +35,7 @@ class ContactManager:
             if existing_contact.name == contact.name:
                 print(f"Contact with the name {contact.name} already exists.")
                 return
-
+        
         # Add the new contact
         self.contacts.append(contact)
         print(f"Contact {contact.name} successfully added.")
@@ -44,25 +44,25 @@ class ContactManager:
         """
         Removes a contact from the list by name.
         """
-        # Find and remove the contact by name
-        for existing_contact in self.contacts:
-            if existing_contact.name == name:
-                self.contacts.remove(existing_contact)
-                print(f"Contact with the name {name} successfully removed.")
-                return
-        print(f"No contact found with the name {name}.")
+        raise NotImplementedError("The 'remove_contact' method is not implemented.")
 
     def edit_contact(self, name: str, updated_contact: Contact) -> None:
         """
         Changes information about a contact.
         """
-        # Find and update the contact by name
-        for idx, existing_contact in enumerate(self.contacts):
-            if existing_contact.name == name:
-                self.contacts[idx] = updated_contact
-                print(f"Contact with the name {name} successfully updated.")
+        # Find the contact by name
+        for i, contact in enumerate(self.contacts):
+            if contact.name == name:
+                # Validate the updated phone number and email
+                contact._validate_phone_number(updated_contact.phone_number)
+                contact._validate_email(updated_contact.email)
+                
+                # Update the contact information
+                self.contacts[i] = updated_contact
+                print(f"Contact {name} updated successfully.")
                 return
-        print(f"No contact found with the name {name}.")
+        
+        print(f"Contact with the name {name} not found.")
 
     def search_by_name(self, name: str) -> List[Contact]:
         """
