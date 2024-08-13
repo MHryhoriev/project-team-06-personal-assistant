@@ -1,2 +1,2 @@
 from .note import Note
-from .note import Contact
+from .contact import Contact
