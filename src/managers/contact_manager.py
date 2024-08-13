@@ -60,10 +60,7 @@ class ContactManager:
                 return
             #if not found
         print(f"Error: Contact with name '{name}' not found.")
-
-
-        
-
+      
     def search_by_name(self, name: str) -> List[Contact]:
         """
         Searches for contacts by name or part of the name.
