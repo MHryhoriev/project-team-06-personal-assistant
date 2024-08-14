@@ -103,7 +103,7 @@ class ContactManager:
         """
         matching_contacts = []
         #search for contacts with matching email
-        for contacts in self.contacts:
+        for contact in self.contacts:
             if email in contact.email:
                 matching_contacts.append(contact)
         # retrun the list of matching contacts        
