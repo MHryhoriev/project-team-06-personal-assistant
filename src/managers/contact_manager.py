@@ -19,9 +19,7 @@ search_by_email(email: str): Search for prospects by email.
 search_by_phone_number(phone_number: str): Search for contacts by phone number.
 """
 
-
 import re
-
 from typing import List
 from models import Contact  # Assume Contact class is defined in 'contact.py'
 
@@ -84,7 +82,6 @@ class ContactManager:
             ValueError: If the name parameter is empty.
             RuntimeError: If there is an unexpected error during the search.
         """
-
         try:
             if not name.strip():
                 raise ValueError("Search name cannot be empty.")
