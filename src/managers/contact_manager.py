@@ -30,18 +30,20 @@ class ContactManager:
 
     def add_contact(self, contact: Contact) -> None:
         """
-        Adds a new contact to the list.
+        Adds a new contact to the list if it doesn't already exist.
         """
+
         # Check if contact with the same name already exists
-        for existing_contact in self.contacts:
-            if existing_contact.name == contact.name:
-                print(f"Contact with the name '{contact.name}' already exists.")
-                return
+        if self.contacts: # Skip if list is empty
+            for existing_contact in self.contacts:
+                if existing_contact.name == contact.name:
+                    print(f"Contact with the name '{contact.name}' already exists.")
+                    return
         
         # Add the new contact to the list
         self.contacts.append(contact)
         print(f"Contact '{contact.name}' successfully added.")
-
+        
     def remove_contact(self, name: str) -> None:
         """
         Removes a contact from the list by name.
@@ -52,7 +54,19 @@ class ContactManager:
         """
         Changes information about a contact.
         """
-        raise NotImplementedError("The 'edit_contact' method is not implemented.")
+        # Find the contact by name
+        for i, contact in enumerate(self.contacts):
+            if contact.name == name:
+                # Validate the updated phone number and email
+                contact._validate_phone_number(updated_contact.phone_number)
+                contact._validate_email(updated_contact.email)
+                
+                # Update the contact information
+                self.contacts[i] = updated_contact
+                print(f"Contact {name} updated successfully.")
+                return
+        
+        print(f"Contact with the name {name} not found.")
 
     def search_by_name(self, name: str) -> List[Contact]:
         """
@@ -87,10 +101,33 @@ class ContactManager:
         """
         Search for contacts by email.
         """
-        raise NotImplementedError("The 'search_by_email' method is not implemented.")
+        matching_contacts = []
+        #search for contacts with matching email
+        for contacts in self.contacts:
+            if email in contact.email:
+                matching_contacts.append(contact)
+        # retrun the list of matching contacts        
+        return matching_contacts
 
     def search_by_phone_number(self, phone_number: str) -> List[Contact]:
         """
-        Search for contacts by phone number.
+        Search for contacts by phone number (exact or partial match).
+
+        Parameters:
+        - contacts (list of dict): A list of contacts, where each contact is represented by a dictionary with 'name' and 'phone' keys.
+        - phone_number (str): The phone number or part of the phone number to be searched.
+
+        Returns:
+        - list of dict: A list of contacts whose phone numbers match the search query.
         """
-        raise NotImplementedError("The 'search_by_phone_number' method is not implemented.")
+        # Initialize an empty list to hold matching contacts
+        matching_contacts = []
+
+        # Iterate over each contact in the contacts list
+        if self.contacts: # Skip if list is empty
+            for contact in self.contacts:
+                # Check if the phone number part of the contact matches the search query
+                if str(phone_number) in contact.phone_number:
+                    matching_contacts.append(contact)
+
+        return matching_contacts
