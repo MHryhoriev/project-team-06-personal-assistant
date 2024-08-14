@@ -19,7 +19,9 @@ search_by_email(email: str): Search for prospects by email.
 search_by_phone_number(phone_number: str): Search for contacts by phone number.
 """
 
+
 import re
+
 from typing import List
 from models import Contact  # Assume Contact class is defined in 'contact.py'
 
@@ -30,8 +32,9 @@ class ContactManager:
 
     def add_contact(self, contact: Contact) -> None:
         """
-        Adds a new contact to the list.
+        Adds a new contact to the list if it doesn't already exist.
         """
+
         # Check if contact with the same name already exists
         for existing_contact in self.contacts:
             if existing_contact.name == contact.name:
@@ -41,7 +44,7 @@ class ContactManager:
         # Add the new contact to the list
         self.contacts.append(contact)
         print(f"Contact '{contact.name}' successfully added.")
-
+        
     def remove_contact(self, name: str) -> None:
         """
         Removes a contact from the list by name.
@@ -52,7 +55,19 @@ class ContactManager:
         """
         Changes information about a contact.
         """
-        raise NotImplementedError("The 'edit_contact' method is not implemented.")
+        # Find the contact by name
+        for i, contact in enumerate(self.contacts):
+            if contact.name == name:
+                # Validate the updated phone number and email
+                contact._validate_phone_number(updated_contact.phone_number)
+                contact._validate_email(updated_contact.email)
+                
+                # Update the contact information
+                self.contacts[i] = updated_contact
+                print(f"Contact {name} updated successfully.")
+                return
+        
+        print(f"Contact with the name {name} not found.")
 
     def search_by_name(self, name: str) -> List[Contact]:
         """
@@ -68,6 +83,7 @@ class ContactManager:
             ValueError: If the name parameter is empty.
             RuntimeError: If there is an unexpected error during the search.
         """
+
         try:
             if not name.strip():
                 raise ValueError("Search name cannot be empty.")
@@ -87,10 +103,12 @@ class ContactManager:
         """
         Search for contacts by email.
         """
-        raise NotImplementedError("The 'search_by_email' method is not implemented.")
+        return [contact for contact in self.contacts if contact.email == email]
 
     def search_by_phone_number(self, phone_number: str) -> List[Contact]:
         """
         Search for contacts by phone number.
         """
+
         raise NotImplementedError("The 'search_by_phone_number' method is not implemented.")
+
