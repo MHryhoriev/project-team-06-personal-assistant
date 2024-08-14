@@ -21,6 +21,7 @@ search_by_phone_number(phone_number: str): Search for contacts by phone number.
 
 import re
 from typing import List
+from datetime import datetime, timedelta, date
 from models import Contact  # Assume Contact class is defined in 'contact.py'
 
 class ContactManager:
@@ -94,3 +95,21 @@ class ContactManager:
         Search for contacts by phone number.
         """
         raise NotImplementedError("The 'search_by_phone_number' method is not implemented.")
+    
+
+
+    def get_upcoming_birthdays(self, n_day: int=7) -> List:
+        if not self.contacts:
+            return ()
+        to_date = date.today()
+        res = []
+        for contact in self.contacts:
+            birthday = datetime.strptime(contact.birthday, "%d.%m.%Y").replace(year=to_date.year).date()
+
+            if birthday < to_date:
+                birthday = birthday.replace(year=to_date.year+1)
+
+            if to_date <= birthday <= (to_date + timedelta(days=n_day)):
+                res.append(f"name: {contact.name}, congratulation_date: {birthday.strftime('%d.%m.%Y')}\n")
+
+        return res
