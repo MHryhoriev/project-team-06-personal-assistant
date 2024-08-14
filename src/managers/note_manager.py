@@ -14,6 +14,21 @@ class NoteManager:
         """
         Adds a new note to the list of notes.
         """
+        #validate title
+        if not note.title:
+            raise ValueError ("The title cannot be empty.")
+        
+        if len(note.title) <5: #minimum length of the title. can be any number.
+            raise ValueError ("Title must be at least 5 characters long.")
+        
+        #Validation of content
+        if not note.content:
+            raise ValueError ("The content cannot be empty.")
+        
+        #Add note to the list is validation successful
+        self.notes.append(note)
+        print(f"Note titled '{note.title}' successfully added.")
+
         raise NotImplementedError("The 'add_note' method is not implemented.")
 
     def search_notes(self, query: str) -> List[Note]:
