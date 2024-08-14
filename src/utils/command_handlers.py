@@ -49,7 +49,7 @@ def handle_search_contact(manager: ContactManager) -> None:
         "phone": manager.search_by_phone_number
     }
     
-    search_method = search_map.get(search_type)
+    search_method = search_map.get(search_type, "")
 
     if search_method:
         try:
