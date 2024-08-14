@@ -22,6 +22,7 @@ class NoteManager:
             print("Error: The content must not be empty.")
             return False
         return True
+    
     def add_note(self, note: Note) -> None:
         """
         Adds a new note to the list of notes.
