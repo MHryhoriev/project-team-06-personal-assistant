@@ -21,13 +21,18 @@ search_by_phone_number(phone_number: str): Search for contacts by phone number.
 
 import re
 import os
-from storage import Storage
+from storage import ContactStorage
 from typing import List
-from models import Contact  # Assume Contact class is defined in 'contact.py'
+from models import Contact
 
 class ContactManager:
-    def __init__(self, storage: Storage) -> None:
-        # Initialize an empty list of contacts
+    def __init__(self, storage: ContactStorage) -> None:
+        """
+        Initializes the ContactManager with a ContactStorage instance.
+
+        Args:
+            storage (ContactStorage): An instance of ContactStorage for managing contact data.
+        """
         self.storage = storage
         self.contacts: List[Contact] = self.storage.load_data()
 
@@ -49,7 +54,7 @@ class ContactManager:
         """
 
         # Check if contact with the same name already exists
-        if self.contacts: # Skip if list is empty
+        if self.contacts:
             for existing_contact in self.contacts:
                 if existing_contact.name == contact.name:
                     print(f"Contact with the name '{contact.name}' already exists.")
