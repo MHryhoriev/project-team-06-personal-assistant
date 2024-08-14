@@ -43,23 +43,24 @@ def handle_search_contact(manager: ContactManager) -> None:
     search_type = input("Search by (name/email/phone): ").strip().lower()
     query = input("Enter the search query: ").strip()
 
-    try:
-        if search_type == "name":
-            results = manager.search_by_name(query)
-        elif search_type == "email":
-            results = manager.search_by_email(query)
-        elif search_type == "phone":
-            results = manager.search_by_phone_number(query)
-        else:
-            print("Invalid search type. Please choose 'name', 'email', or 'phone'.")
-            return
+    search_map = {
+        "name": manager.search_by_name,
+        "email": manager.search_by_email,
+        "phone": manager.search_by_phone_number
+    }
+    
+    search_method = search_map.get(search_type)
 
-        if results:
-            print(f"Found {len(results)} contact(s):")
-            for contact in results:
-                print(contact)
-        else:
-            print("No contacts found.")
-
-    except Exception as ex:
-        print(f"An error occurred during the search: {ex}")
+    if search_method:
+        try:
+            results = search_method(query)
+            if results:
+                print(f"Found {len(results)} contact(s):")
+                for contact in results:
+                    print(contact)
+            else:
+                print("No contacts found.")
+        except Exception as ex:
+            print(f"An error occurred during the search: {ex}")
+    else:
+        print("Invalid search type. Please choose 'name', 'email', or 'phone'.")
