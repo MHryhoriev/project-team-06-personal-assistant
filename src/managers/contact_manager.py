@@ -25,7 +25,7 @@ from typing import List
 from models import Contact
 
 class ContactManager:
-    def __init__(self) -> None:
+    def __init__(self, storage: ContactStorage) -> None:
         """
         Initializes the ContactManager with a ContactStorage instance.
 
@@ -116,7 +116,7 @@ class ContactManager:
             pattern = re.compile(re.escape(name), re.IGNORECASE)
             matching_contacts = [contact for contact in self.contacts if pattern.search(contact.name)]
             
-            return matching_contacts
+            return matching_contacts # A list of notes s that match the search query.
         
         except re.error as e:
             raise RuntimeError(f"An error occurred while processing the search pattern: {e}")
@@ -158,12 +158,11 @@ class ContactManager:
                     matching_contacts.append(contact)
 
         return matching_contacts
-    
+
     def get_upcoming_birthdays(self, n_day: int=7) -> List:
         """
         A list of birthdays for a specified period of time
         """
-        
         res = [] # Create an empty list
         if self.contacts: 
             to_date = date.today() # Let's find out what day it is today
@@ -174,8 +173,3 @@ class ContactManager:
                 if to_date <= birthday <= (to_date + timedelta(days=n_day)): # Check if the date of birth falls within a given period of days
                     res.append(f"name: {contact.name}, congratulation_date: {birthday.strftime('%d.%m.%Y')}\n") # Add the found date
         return res # Return the list of birthdays
-
-    
-
-    
-    
