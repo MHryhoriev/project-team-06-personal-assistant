@@ -1,6 +1,6 @@
 from managers import ContactManager
 from models import Contact
-from utils import error_handler
+from utils.custom_decorators import error_handler
 
 @error_handler
 def handle_add_contact(manager: ContactManager) -> None:

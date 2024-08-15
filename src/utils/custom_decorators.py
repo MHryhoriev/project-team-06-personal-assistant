@@ -1,7 +1,8 @@
 """The module for custom decorators"""
 
+from typing import Callable, Any
 
-def error_handler(func: function) -> any:
+def error_handler(func: Callable[..., Any]) -> Callable[..., Any]:
     """
     Decorator to handle errors in handlers.
     Catches specific and unforeseen exceptions and displays an error message.
