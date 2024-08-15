@@ -56,5 +56,8 @@ class NoteManager:
         for note in self.notes: # Sorting through the note in the list
             if note.id == note_id: # Compare note id
                 self.notes.remove(note) # Delete the found note
+                print(f"Note {note_id} successfully deleted.")
                 return
+        
+        print(f"Note {note_id} not found.")
             
