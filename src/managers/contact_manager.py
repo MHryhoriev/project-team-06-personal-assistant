@@ -25,6 +25,7 @@ from storage import ContactStorage
 from typing import List
 from models import Contact
 
+
 class ContactManager:
     def __init__(self, storage: ContactStorage) -> None:
         """
@@ -153,3 +154,26 @@ class ContactManager:
                     matching_contacts.append(contact)
 
         return matching_contacts
+
+    
+    def handle_display_all_contacts(manager: Contact) -> str:
+        """
+        Handles the display of all contacts.
+
+        Returns: 
+         str: A formatted string displaying all contacts or a message if no contacts available.
+        """
+
+        all_contacts = Contact.get_all_contacts()
+
+        if not all_contacts:
+            print("No contacts available.")
+            return
+        
+        contact_list = "\n". join(
+            f"ID: {contact.id}, Name: {contact.name}, Address: {contact.address}, "
+            f"Phone: {contact.phone_number}, Email: {contact.email}, Birthday: {contact.birthday}"
+            for contact in all_contacts
+        )
+        return f"Contacts:\n{contact_list}"
+
