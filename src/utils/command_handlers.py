@@ -70,8 +70,48 @@ def handle_search_contact(manager: ContactManager) -> None:
         print("Invalid search type. Please choose 'name', 'email', or 'phone'.")
  
 
-def handle_add_tag(note_id: int, tag: str) -> str:
-    return note_manager.add_tag(note_id, tag)
+def handle_add_tag(manager: note_manager, note_id: int, tag: str) -> str:
+    """
+    Handles the logic for adding a tag to a note.
 
-def handle_remove_tag(note_id: int, tag:str) -> str:
-    return note_manager.remove_tag(note_id, tag)
+    Args:
+        note_manager (NoteManager): The manager responsible for note operations.
+        note_id (int): The ID of the note to which the tag will be added.
+        tag (str): The tag to be added to the note.
+
+    Returns:
+        str: A message indicating the result of the operation.
+    """
+    if not isinstance(note_id, int) or note_id <= 0:
+        return "Invalid note ID."
+    
+    if not tag or not isinstance(tag, str):
+        return "Invalid tag. Please provide a valid tag string."
+    
+    result = note_manager.add_tag(note_id, tag)
+    return result
+
+def handle_remove_tag(manager: note_manager, note_id: int, tag:str) -> str:
+    """
+    Handles the logic for removing a tag from a note.
+
+    Args:
+        note_manager (NoteManager): The manager responsible for note operations.
+        note_id (int): The ID of the note from which the tag will be removed.
+        tag (str): The tag to be removed from the note.
+
+    Returns:
+        str: A message indicating the result of the operation.
+    """
+
+    if not isinstance (note_id, int) or note_id <= 0:
+      return "Invalid note ID."
+    
+    if not tag or not isinstance(tag, str):
+      return "Invalid tag. Please provide a valid tag string."
+    
+    result = note_manager.remove_tag(note_id, tag)
+    return result
+ 
+  
+   
