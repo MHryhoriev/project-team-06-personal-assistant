@@ -104,3 +104,24 @@ class Contact:
         pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'  # Updated pattern for email validation
         if not re.match(pattern, email):
             raise ValueError(f"Invalid email address: {email}. Expected format: example@domain.com")
+
+
+    def to_dict(self) -> dict:
+        """
+        Converts the Contact object into a dictionary.
+
+        Returns:
+            dict: A dictionary representation of the Contact object where keys are
+                the contact attributes (e.g., 'name', 'address', 'phone_number', 'email', 'birthday')
+                and values are their respective values.
+        """
+        return {
+            "name": self.name,
+            "address": self.address,
+            "phone_number": self.phone_number,
+            "email": self.email,
+            "birthday": self.birthday
+        }
+    
+    def __str__(self) -> str:
+        return f"Name: {self.__name}, Address: {self.__address}, Phone: {self.__phone_number}, Email: {self.__email}, Birthday: {self.__birthday}"

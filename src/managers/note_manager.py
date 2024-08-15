@@ -4,11 +4,19 @@
 """
 import re
 from typing import List
-from models.note import Note  # Assume Note class is defined in 'note.py'
+from models import Note
+from storage import NoteStorage
 
 class NoteManager:
-    def __init__(self) -> None:
-        self.notes: List[Note] = []
+    def __init__(self, storage: NoteStorage) -> None:
+        """
+        Initializes the NoteManager with a NoteStorage instance.
+
+        Args:
+            storage (NoteStorage): An instance of NoteStorage for managing note data.
+        """
+        self.storage = storage
+        self.notes: List[Note] = self.storage.load_data()
 
     def add_note(self, note: Note) -> None:
         """
