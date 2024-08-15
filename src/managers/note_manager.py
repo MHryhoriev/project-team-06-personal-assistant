@@ -42,7 +42,7 @@ class NoteManager:
         """
         raise NotImplementedError("The 'delete_note' method is not implemented.")
 
-    def search_by_tag(self, tag: str) -> List[Note]:
+    def search_notes_by_tag(self, tag: str) -> List[Note]:
         """
         Search the Note by it`s tags.
 
