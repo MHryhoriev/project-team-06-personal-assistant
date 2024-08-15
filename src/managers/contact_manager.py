@@ -24,7 +24,7 @@ from typing import List
 from models import Contact
 
 class ContactManager:
-    def __init__(self) -> None:
+    def __init__(self, storage: ContactStorage) -> None:
         """
         Initializes the ContactManager with a ContactStorage instance.
 
