@@ -48,11 +48,11 @@ class ContactManager:
         """
         Removes a contact from the list by name.
         """
-        for existing_contact in self.contacts:
-            if existing_contact.name == name:
-                self.contacts.remove(name)
-            else:
-                print("The 'remove_contact' method is not implemented.")
+        for contact in self.contacts: # Sorting through the contacts in the list
+            if contact.name == name: # Compare contacts
+                self.contacts.remove(contact) # The found contact is deleted
+                return
+
  
 
     def edit_contact(self, name: str, updated_contact: Contact) -> None:
