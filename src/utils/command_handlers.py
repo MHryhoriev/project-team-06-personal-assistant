@@ -1,6 +1,7 @@
 from managers import ContactManager
 from models import Contact
 from utils.custom_decorators import error_handler
+from managers import note_manager
 
 @error_handler
 def handle_add_contact(manager: ContactManager) -> None:
@@ -67,3 +68,10 @@ def handle_search_contact(manager: ContactManager) -> None:
             print(f"An error occurred during the search: {ex}")
     else:
         print("Invalid search type. Please choose 'name', 'email', or 'phone'.")
+ 
+
+def handle_add_tag(note_id: int, tag: str) -> str:
+    return note_manager.add_tag(note_id, tag)
+
+def handle_remove_tag(note_id: int, tag:str) -> str:
+    return note_manager.remove_tag(note_id, tag)
