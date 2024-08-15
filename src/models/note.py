@@ -39,3 +39,21 @@ class Note:
 
     def __repr__(self) -> str:
         return str(asdict(self))
+    
+    def to_dict(self) -> dict:
+        """
+        Converts the Note object into a dictionary.
+
+        Returns:
+            dict: A dictionary representation of the Note object where keys are
+                the contact attributes (e.g., 'id', 'title', 'contact', 'content', 'created_at', 'updated_at')
+                and values are their respective values.
+        """
+        return {
+            "id": self.id,
+            "title": self.title,
+            "contact": self.contact,
+            "content": self.content,
+            "created_at": self.created_at,
+            "updated_at": self.updated_at
+        }

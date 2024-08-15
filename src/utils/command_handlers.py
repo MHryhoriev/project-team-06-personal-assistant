@@ -1,6 +1,8 @@
 from managers import ContactManager
 from models import Contact
+from utils.custom_decorators import error_handler
 
+@error_handler
 def handle_add_contact(manager: ContactManager) -> None:
     """
     Handles the addition of a new contact to the contact manager.
@@ -29,6 +31,7 @@ def handle_add_contact(manager: ContactManager) -> None:
         print(f"An error occurred while adding the contact: {ex}")
 
 
+@error_handler
 def handle_search_contact(manager: ContactManager) -> None:
     """
     Handles the search for contacts based on the specified search type.
@@ -49,7 +52,7 @@ def handle_search_contact(manager: ContactManager) -> None:
         "phone": manager.search_by_phone_number
     }
     
-    search_method = search_map.get(search_type)
+    search_method = search_map.get(search_type, "")
 
     if search_method:
         try:
