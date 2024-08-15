@@ -160,17 +160,20 @@ class ContactManager:
         return matching_contacts
     
     def get_upcoming_birthdays(self, n_day: int=7) -> List:
+        """
+        A list of birthdays for a specified period of time
+        """
     
-        res = [] # Create an empty list
-        if self.contacts: 
-            to_date = date.today() # Let's find out what day it is today
-            for contact in self.contacts: # We go through the contacts and pike up birthdays, transferring the day to the desired format
-                birthday = datetime.strptime(contact.birthday, "%d.%m.%Y").replace(year=to_date.year).date()
-                if birthday < to_date: # Check if the date of birth has passed
-                    birthday = birthday.replace(year=to_date.year+1) #
-                if to_date <= birthday <= (to_date + timedelta(days=n_day)): # Check if the date of birth falls within a given period of days
-                    res.append(f"name: {contact.name}, congratulation_date: {birthday.strftime('%d.%m.%Y')}\n") # Add the found date
-        return res # Return the list of birthdays
+    res = [] # Create an empty list
+    if self.contacts: 
+        to_date = date.today() # Let's find out what day it is today
+        for contact in self.contacts: # We go through the contacts and pike up birthdays, transferring the day to the desired format
+            birthday = datetime.strptime(contact.birthday, "%d.%m.%Y").replace(year=to_date.year).date()
+            if birthday < to_date: # Check if the date of birth has passed
+                birthday = birthday.replace(year=to_date.year+1) #
+            if to_date <= birthday <= (to_date + timedelta(days=n_day)): # Check if the date of birth falls within a given period of days
+                res.append(f"name: {contact.name}, congratulation_date: {birthday.strftime('%d.%m.%Y')}\n") # Add the found date
+    return res # Return the list of birthdays
 
     
     
