@@ -4,16 +4,23 @@
 """
 
 from typing import List
-from models.note import Note  # Assume Note class is defined in 'note.py'
+from models import Note
+from storage import NoteStorage
 
 class NoteManager:
-    def __init__(self) -> None:
-        self.notes: List[Note] = []
- 
+    def __init__(self, storage: NoteStorage) -> None:
+        """
+        Initializes the NoteManager with a NoteStorage instance.
+
+        Args:
+            storage (NoteStorage): An instance of NoteStorage for managing note data.
+        """
+        self.storage = storage
+        self.notes: List[Note] = self.storage.load_data()
+          
     def validate_note(self, note: Note) -> bool:
         """
         Validates the note's title and content
-
         """
         if not note.title or len(note.title) < 5: #Number 5 is for example. Could be any number
             print("Error: The title must not be empty and should have at least 5 characters.")
