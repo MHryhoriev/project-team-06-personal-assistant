@@ -20,41 +20,21 @@ search_by_phone_number(phone_number: str): Search for contacts by phone number.
 """
 
 import re
-import os
-from storage import ContactStorage
 from typing import List
-from models import Contact
+from models import Contact  # Assume Contact class is defined in 'contact.py'
 
 class ContactManager:
-    def __init__(self, storage: ContactStorage) -> None:
-        """
-        Initializes the ContactManager with a ContactStorage instance.
-
-        Args:
-            storage (ContactStorage): An instance of ContactStorage for managing contact data.
-        """
-        self.storage = storage
-        self.contacts: List[Contact] = self.storage.load_data()
+    def __init__(self) -> None:
+        # Initialize an empty list of contacts
+        self.contacts: List[Contact] = []
 
     def add_contact(self, contact: Contact) -> None:
         """
-        Adds a new contact to the list if it doesn't already exist and saves the updated list to the storage.
-
-        This method performs the following steps:
-        1. Checks if there is already a contact with the same name in the current list.
-        2. If a contact with the same name is found, prints an error message and does not add the new contact.
-        3. If no contact with the same name exists, adds the new contact to the list.
-        4. Updates the stored data by saving the updated list of contacts to the storage.
-
-        Parameters:
-            contact (Contact): The contact to be added to the list. Must be an instance of the Contact class.
-        
-        Returns:
-            None
+        Adds a new contact to the list if it doesn't already exist.
         """
 
         # Check if contact with the same name already exists
-        if self.contacts:
+        if self.contacts: # Skip if list is empty
             for existing_contact in self.contacts:
                 if existing_contact.name == contact.name:
                     print(f"Contact with the name '{contact.name}' already exists.")
@@ -62,7 +42,6 @@ class ContactManager:
         
         # Add the new contact to the list
         self.contacts.append(contact)
-        self.storage.save_data(self.contacts)
         print(f"Contact '{contact.name}' successfully added.")
         
     def remove_contact(self, name: str) -> None:
@@ -72,8 +51,10 @@ class ContactManager:
         for contact in self.contacts: # Sorting through the contacts in the list
             if contact.name == name: # Compare contacts
                 self.contacts.remove(contact) # The found contact is deleted
+                print(f"Contact {name} successfully deleted.")
                 return
 
+        print(f"Contact {name} not found.")
  
 
     def edit_contact(self, name: str, updated_contact: Contact) -> None:
@@ -89,7 +70,6 @@ class ContactManager:
                 
                 # Update the contact information
                 self.contacts[i] = updated_contact
-                self.storage.save_data(self.contacts)
                 print(f"Contact {name} updated successfully.")
                 return
         
@@ -133,7 +113,7 @@ class ContactManager:
         for contact in self.contacts:
             if email in contact.email:
                 matching_contacts.append(contact)
-        # return the list of matching contacts        
+        # retrun the list of matching contacts        
         return matching_contacts
 
     def search_by_phone_number(self, phone_number: str) -> List[Contact]:
