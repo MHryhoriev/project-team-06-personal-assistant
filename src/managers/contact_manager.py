@@ -140,7 +140,7 @@ class ContactManager:
         Handler different commands. Responds to "all" command by displaying all contacts.
         
         """
-        if command.lowe() == "all":
+        if command.lower() == "all":
             self.display_all_contacts()
 
     def display_all_contacts(self) -> None:
