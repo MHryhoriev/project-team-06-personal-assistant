@@ -47,13 +47,8 @@ class ContactManager:
     def remove_contact(self, name: str) -> None:
         """
         Removes a contact from the list by name.
-        """
-        for contact in self.contacts:
-            if contact.name == name:
-                self.contacts.remove(contact)
-                return
-                      
-
+        """     
+                            
     def edit_contact(self, name: str, updated_contact: Contact) -> None:
         """
         Changes information about a contact.
@@ -93,7 +88,7 @@ class ContactManager:
             pattern = re.compile(re.escape(name), re.IGNORECASE)
             matching_contacts = [contact for contact in self.contacts if pattern.search(contact.name)]
             
-            return matching_contacts
+            return matching_contacts # A list of notes s that match the search query.
         
         except re.error as e:
             raise RuntimeError(f"An error occurred while processing the search pattern: {e}")
@@ -136,4 +131,4 @@ class ContactManager:
 
         return matching_contacts
     
-    
+
