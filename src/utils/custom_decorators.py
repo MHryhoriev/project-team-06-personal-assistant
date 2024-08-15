@@ -1,0 +1,23 @@
+"""The module for custom decorators"""
+
+
+def error_handler(func: function) -> any:
+    """
+    Decorator to handle errors in handlers.
+    Catches specific and unforeseen exceptions and displays an error message.
+    """
+    def inner(*args, **kwargs):
+        try:
+            return func(*args, **kwargs)
+        except ValueError:
+            print("Please enter the name.")
+        except IndexError:
+            print("To many names, try the command 'all' to investigate.")
+        except KeyError:
+            print("Enter the correct name please, try the command 'all' to investigate.")
+        except NotImplementedError as nie:
+            print(f"NotImplementedError in {func.__name__}: {nie}")
+        except Exception as un_err:
+            print(f"Unexpected error in {func.__name__}: {un_err}")
+        
+    return inner

@@ -128,7 +128,7 @@ class ContactManager:
         for contact in self.contacts:
             if email in contact.email:
                 matching_contacts.append(contact)
-        # retrun the list of matching contacts        
+        # return the list of matching contacts        
         return matching_contacts
 
     def search_by_phone_number(self, phone_number: str) -> List[Contact]:
