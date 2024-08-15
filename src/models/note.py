@@ -38,26 +38,6 @@ class Note:
         self.content = new_content
         self.updated_at = datetime.now()
 
-    def add_tag(self, tag: str) -> str:
-        """
-        Add a tag to a note if it does not exist yet.
-        """
-        if tag in self.tags:
-            return f"Tag '{tag}' already exists."
-        self.tags.append(tag)
-        self.updated_at = datetime.now()
-        return f"Tag '{tag}' added."
-    
-    def remove_tag(self, tag: str) ->str:
-        """
-        Remove a tag from the note if exists.
-        """
-        if tag not in self.tags:
-            return f"Tag '{tag}' not found."
-        self.tags.remove(tag)
-        self.updated_at = datetime.now()
-        return f"Tag '{tag}' removed."
-
     def __repr__(self) -> str:
         return str(asdict(self))
     
