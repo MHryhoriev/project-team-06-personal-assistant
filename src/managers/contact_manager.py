@@ -19,8 +19,9 @@ search_by_phone_number(phone_number: str): Search for contacts by phone number.
 """
 
 import re
+from storage import ContactStorage
 from typing import List
-from models import Contact  # Assume Contact class is defined in 'contact.py'
+from models import Contact
 
 class ContactManager:
     def __init__(self) -> None:
