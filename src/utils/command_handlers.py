@@ -69,10 +69,12 @@ def handle_search_contact(manager: ContactManager) -> None:
     else:
         print("Invalid search type. Please choose 'name', 'email', or 'phone'.")
 
-def display_all_contacts(contacts: List[Contact]) -> None:
+def display_all_contacts(manager: ContactManager) -> None:
     """
     Displays all contacts in a readable format. Shows a message if there are no contacts.
     """
+    contacts = manager.get_all_contacts()
+    
     if not contacts:
         print("No contacts available.")
     else:
