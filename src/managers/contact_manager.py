@@ -115,7 +115,7 @@ class ContactManager:
             pattern = re.compile(re.escape(name), re.IGNORECASE)
             matching_contacts = [contact for contact in self.contacts if pattern.search(contact.name)]
             
-            return matching_contacts
+            return matching_contacts # A list of notes s that match the search query.
         
         except re.error as e:
             raise RuntimeError(f"An error occurred while processing the search pattern: {e}")
@@ -157,3 +157,5 @@ class ContactManager:
                     matching_contacts.append(contact)
 
         return matching_contacts
+    
+
