@@ -1,5 +1,6 @@
 # from models.contact import Contact
 # from managers.contact_manager import ContactManager
+# import command_handlers
 
 
 if __name__ == "__main__":
