@@ -69,16 +69,6 @@ def handle_search_contact(manager: ContactManager) -> None:
     else:
         print("Invalid search type. Please choose 'name', 'email', or 'phone'.")
 
-
-def handle_command(self, command: str) -> None:
-     """
-    Handles different commands. Responds to the 'all' command by displaying all contacts.
-    """
-     if command.lower() == "all":
-      self.display_all_contacts()
-
-
-
 def display_all_contacts(contacts: List[Contact]) -> None:
     """
     Displays all contacts in a readable format. Shows a message if there are no contacts.
