@@ -2,7 +2,6 @@
 
 Task: Develop a ContactManager class that will be responsible for managing all contacts.
 
-‌
 
 Fields:
 
@@ -25,16 +24,34 @@ from models import Contact  # Assume Contact class is defined in 'contact.py'
 
 class ContactManager:
     def __init__(self) -> None:
-        # Initialize an empty list of contacts
-        self.contacts: List[Contact] = []
+        """
+        Initializes the ContactManager with a ContactStorage instance.
+
+        Args:
+            storage (ContactStorage): An instance of ContactStorage for managing contact data.
+        """
+        self.storage = storage
+        self.contacts: List[Contact] = self.storage.load_data()
 
     def add_contact(self, contact: Contact) -> None:
         """
-        Adds a new contact to the list if it doesn't already exist.
+        Adds a new contact to the list if it doesn't already exist and saves the updated list to the storage.
+
+        This method performs the following steps:
+        1. Checks if there is already a contact with the same name in the current list.
+        2. If a contact with the same name is found, prints an error message and does not add the new contact.
+        3. If no contact with the same name exists, adds the new contact to the list.
+        4. Updates the stored data by saving the updated list of contacts to the storage.
+
+        Parameters:
+            contact (Contact): The contact to be added to the list. Must be an instance of the Contact class.
+        
+        Returns:
+            None
         """
 
         # Check if contact with the same name already exists
-        if self.contacts: # Skip if list is empty
+        if self.contacts:
             for existing_contact in self.contacts:
                 if existing_contact.name == contact.name:
                     print(f"Contact with the name '{contact.name}' already exists.")
@@ -42,6 +59,7 @@ class ContactManager:
         
         # Add the new contact to the list
         self.contacts.append(contact)
+        self.storage.save_data(self.contacts)
         print(f"Contact '{contact.name}' successfully added.")
         
     def remove_contact(self, name: str) -> None:
@@ -55,7 +73,6 @@ class ContactManager:
                 return
 
         print(f"Contact {name} not found.")
- 
 
     def edit_contact(self, name: str, updated_contact: Contact) -> None:
         """
@@ -70,6 +87,7 @@ class ContactManager:
                 
                 # Update the contact information
                 self.contacts[i] = updated_contact
+                self.storage.save_data(self.contacts)
                 print(f"Contact {name} updated successfully.")
                 return
         
