@@ -41,3 +41,26 @@ class NoteManager:
         Deletes a note with the specified note_id.
         """
         raise NotImplementedError("The 'delete_note' method is not implemented.")
+
+    def add_tag(self, note_id: int, tag: str) -> str:
+        """
+        Adds tag to the note with the specified note_id.
+        """
+        note = self.get_note_by_id(note_id)
+        if note:
+            result = note.add_tag(tag)
+            self.storage.save_data(self.notes)
+            return result
+        return f"Note with id {note_id} not found."
+    
+    def remove_tag (self, note_id: int, tag: str) -> str:
+        """
+        Removes a tag from the note with the specified note_id.
+        """
+
+        note = self.get_note_by_id(note_id)
+        if note:
+            result = note.remove_tag(tag)
+            self.storage.save_data(self.notes)
+            return result
+        return f"Note with id {note_id} not found."
