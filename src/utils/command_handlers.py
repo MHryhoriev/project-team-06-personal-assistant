@@ -19,6 +19,10 @@ def handle_add_contact(manager: ContactManager) -> None:
     name = _prompt_for_non_empty_name("Enter name: ")
     if not name:
         return
+      
+    if manager.search_by_name(name):
+        print(f"Contact with the name '{name}' already exists.")
+        return
         
     address = input("Enter address (or press Enter to skip): ").strip()
     phone_number = input("Enter phone number (or press Enter to skip): ").strip()
@@ -66,6 +70,46 @@ def handle_search_contact(manager: ContactManager) -> None:
         print("Invalid search type. Please choose 'name', 'email', or 'phone'.")
 
 @error_handler
+def handle_edit_contact(manager: ContactManager) -> None:
+    """
+    Handles the editing of an existing contact in the contact manager.
+
+    Prompts the user to enter the name of the contact to be edited and the new details for the contact.
+    It then attempts to update the contact in the manager. If the contact is successfully updated,
+    a success message is printed. If the contact is not found or an error occurs, an error message is displayed.
+
+    Args:
+        manager (ContactManager): An instance of ContactManager to manage contacts.
+    """
+    try:
+        name = _prompt_for_non_empty_name("Enter the name of the contact to edit: ")
+        if not name:
+            return
+
+        address = input("Enter new address (or press Enter to keep current): ").strip()
+        phone_number = input("Enter new phone number (or press Enter to keep current): ").strip()
+        email = input("Enter new email (or press Enter to keep current): ").strip()
+        birthday = input("Enter new birthday (DD.MM.YYYY) (or press Enter to keep current): ").strip()
+
+        updated_contact_data = manager.search_by_name(name)
+        if updated_contact is None:
+            print(f"Contact with the name {name} not found.")
+            return
+      
+        if address:
+            updated_contact_data['address'] = address
+        if phone_number:
+            updated_contact_data['phone_number'] = phone_number
+        if email:
+            updated_contact_data['email'] = email
+        if birthday:
+            updated_contact_data['birthday'] = birthday
+
+        # Update the contact
+        manager.edit_contact(name, updated_contact_data)
+    except Exception as ex:
+        print(f"An error occurred while editing the contact: {ex}")
+
 def handle_remove_contact(manager: ContactManager) -> None:
     """
     Handles the removal of a contact from the contact manager.

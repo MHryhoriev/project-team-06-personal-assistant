@@ -5,7 +5,8 @@ from .command_handlers import (
     handle_show_all_notes,
     handle_remove_contact,
     handle_show_all_contacts,
-    handle_upcoming_birthdays
+    handle_upcoming_birthdays,
+    handle_edit_contact
 )
 from .custom_decorators import error_handler
 from .suggestion_utils import suggest_command, completer

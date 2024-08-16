@@ -6,20 +6,19 @@ from utils import (
     handle_show_all_notes,
     handle_remove_contact,
     handle_show_all_contacts,
-    handle_upcoming_birthdays
+    handle_upcoming_birthdays,
+    handle_edit_contact
 )
 from storage import ContactStorage, NoteStorage
 from constants import CONTACT_DATA_FILE_PATH, NOTE_DATA_FILE_PATH
 from prompt_toolkit import PromptSession
 from utils import suggest_command, completer
 
-
 def main():
     """
     Main entry point for the Contact Manager console application.
     Initializes the ContactManager and provides a command-line interface for the user.
     """
-
     contact_storage = ContactStorage(file_path=CONTACT_DATA_FILE_PATH)
     contact_manager = ContactManager(storage=contact_storage)
 
@@ -32,7 +31,7 @@ def main():
 
     while True:
         try:
-            user_input = session.prompt("Enter a command (add_contact/remove_contact/search_contact/all_contacts/all_notes/check_birthdays): ")
+            user_input = session.prompt("Enter a command (add_contact/edit_contact/remove_contact/search_contact/all_contacts/all_notes/check_birthdays): ")
             command, *args = parse_input(user_input)
 
             if command in ["exit", "close"]:
@@ -40,6 +39,8 @@ def main():
                 break
             elif command == "add_contact":
                 handle_add_contact(contact_manager)
+            elif command == "edit_contact":
+                handle_edit_contact(contact_manager)
             elif command == "remove_contact":
                 handle_remove_contact(contact_manager)
             elif command == "search_contact":
