@@ -17,13 +17,34 @@ class NoteManager:
         """
         self.storage = storage
         self.notes: List[Note] = self.storage.load_data()
-
+          
+    def validate_note(self, note: Note, min_title_length: int = 5) -> bool:
+        """
+        Validates the note's title and content
+        """
+        if not note.title or len(note.title) < min_title_length: #Number 5 is for example. Could be any number
+            print(f"Error: The title must not be empty and should have at least {min_title_length} characters.")
+            return False
+        if not note.content:
+            print("Error: The content must not be empty.")
+            return False
+        return True
+    
     def add_note(self, note: Note) -> None:
         """
         Adds a new note to the list of notes.
         """
-        raise NotImplementedError("The 'add_note' method is not implemented.")
+        #Check if the note with the same name already exists
+        for existing_note in self.notes:
+            if existing_note.title.lower() == note.title.lower():
+                print(f"Error: A note with the same '{note.title}' already exists")
+                return
+            
+        #Add the new note to the list
+        self.notes.append(note)
+        print(f"Success: Note titled '{note.title}' successfully added.")
 
+   
     def search_notes(self, query: str) -> List[Note]:
         """
         Searches for notes by title or content and returns a list of matching notes.
