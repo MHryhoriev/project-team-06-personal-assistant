@@ -130,7 +130,7 @@ def handle_remove_contact(manager: ContactManager) -> None:
     print(result)
 
 @error_handler
-def handle_show_all_notes(note_manager: NoteManager) -> str:
+def handle_show_all_notes(note_manager: NoteManager) -> None:
     """
     Handles the display of all notes from a Note object.
 
@@ -138,7 +138,7 @@ def handle_show_all_notes(note_manager: NoteManager) -> str:
         note (Note): An instance of the Note class containing the data.
 
     Returns:
-        str: A formatted string displaying all notes or a message if no notes are available.
+        None: Prints A formatted string displaying all notes or a message if no notes are available.
     """
     
     all_notes = note_manager.get_all_notes()
@@ -150,7 +150,7 @@ def handle_show_all_notes(note_manager: NoteManager) -> str:
     print(f"Notes:\n{note_list}")
 
 @error_handler
-def handle_add_tag(manager: NoteManager, tag: str = "", note_id: int = 0) -> str:
+def handle_add_tag(manager: NoteManager, tag: str = "", note_id: int = 0) -> None:
     """
     Handles the logic for adding a tag to a note.
 
@@ -160,11 +160,10 @@ def handle_add_tag(manager: NoteManager, tag: str = "", note_id: int = 0) -> str
         tag (str): The tag to be added to the note.
 
     Returns:
-        str: A message indicating the result of the operation.
+        None: Prints A message indicating the result of the operation.
     """
     if tag and note_id:
-        if manager.add_tag(note_id, tag):
-            f"The '{tag}' tag has been added to notes with id '{note_id}"
+        print(manager.add_tag(note_id, tag))
         
     note_name = input("Please, enter the Note name or title: ").strip().lower()
     tag = input("Please, enter the tag name: ").strip()
@@ -173,15 +172,15 @@ def handle_add_tag(manager: NoteManager, tag: str = "", note_id: int = 0) -> str
         note_list = manager.search_notes(note_name)
     
     if not isinstance(note_id, int) or note_id <= 0:
-        return "Invalid note ID."
+        print("Invalid note ID.")
     
     if not tag or not isinstance(tag, str):
-        return "Invalid tag. Please provide a valid tag string."
+        print("Invalid tag. Please provide a valid tag string.")
         
-    return "\n".join([manager.add_tag(note.id, tag)  for note in note_list])
+    print("\n".join([manager.add_tag(note.id, tag)  for note in note_list]))
 
 @error_handler
-def handle_remove_tag(manager: NoteManager, note_id: int, tag:str) -> str:
+def handle_remove_tag(manager: NoteManager, note_id: int, tag:str) -> None:
     """
     Handles the logic for removing a tag from a note.
 
@@ -191,12 +190,11 @@ def handle_remove_tag(manager: NoteManager, note_id: int, tag:str) -> str:
         tag (str): The tag to be removed from the note.
 
     Returns:
-        str: A message indicating the result of the operation.
+        None: Prints A message indicating the result of the operation.
     """
     
     if tag and note_id:
-        if manager.add_tag(note_id, tag):
-            f"The '{tag}' tag has been deleted to notes with id '{note_id}"
+        print(manager.remove_tag(note_id, tag))
         
     note_name = input("Please, enter the Note name or title: ").strip().lower()
     tag = input("Please, enter the tag name: ").strip()
@@ -205,15 +203,15 @@ def handle_remove_tag(manager: NoteManager, note_id: int, tag:str) -> str:
         note_list = manager.search_notes(note_name)
     
     if not isinstance(note_id, int) or note_id <= 0:
-        return "Invalid note ID."
+        print("Invalid note ID.")
     
     if not tag or not isinstance(tag, str):
-        return "Invalid tag. Please provide a valid tag string."
+        print("Invalid tag. Please provide a valid tag string.")
     
-    return "\n".join([manager.remove_tag(note.id, tag)  for note in note_list])
+    print("\n".join([manager.remove_tag(note.id, tag)  for note in note_list]))
 
 @error_handler
-def handle_show_all_contacts(manager: ContactManager) -> str:
+def handle_show_all_contacts(manager: ContactManager) -> None:
     """
     Retrieves and formats all contacts from the ContactManager into a readable string.
 
@@ -221,7 +219,7 @@ def handle_show_all_contacts(manager: ContactManager) -> str:
         manager (ContactManager): An instance of ContactManager that contains the contacts.
 
     Returns:
-        str: A formatted string of all contacts or a message indicating no contacts are available.
+        None: Prints A formatted string of all contacts or a message indicating no contacts are available.
     """
     contacts = manager.get_all_contacts()
     
@@ -261,6 +259,25 @@ def handle_upcoming_birthdays(manager: ContactManager) -> None:
             print(birthday)
     else:
         print("No upcoming birthdays within the specified period.")
+
+@error_handler
+def handler_search_notes_by_tag(self, manager: NoteManager, tag: str) -> None:
+    """
+    Handles the display of all notes from a NoteManager object filtered by tags.
+
+    Args:
+        tag (str): An instance of the Note class containing the data.
+
+    Returns:
+        None: Prints A formatted string displaying filtered notes or a message if no notes are available.
+    """
+    all_notes = manager.search_notes_by_tag(tag)
+    if not all_notes:
+        print("No notes available.")
+        return
+        
+    note_list = "\n".join(str(note) for note in all_notes)
+    print(f"Notes:\n{note_list}")
 
 @error_handler
 def _prompt_for_non_empty_name(prompt: str) -> Optional[str]:
