@@ -6,6 +6,10 @@ from prompt_toolkit import PromptSession
 from utils import suggest_command, completer
 
 def main():
+    """
+    Main entry point for the Contact Manager console application.
+    Initializes the ContactManager and provides a command-line interface for the user.
+    """
     contact_storage = ContactStorage(file_path=CONTACT_DATA_FILE_PATH)
     contact_manager = ContactManager(storage=contact_storage)
 
@@ -20,6 +24,8 @@ def main():
         try:
             user_input = session.prompt("Enter a command (add/search/edit/remove/exit): ")
             command, *args = parse_input(user_input)
+            
+            print(f"Command entered: {command}")  # Debugging line
 
             if command in ["exit", "close"]:
                 print("Good bye!")
@@ -29,10 +35,12 @@ def main():
             elif command == "edit":
                 handle_edit_contact(contact_manager)
             elif command == "remove":
+                # Implement remove functionality here if needed
                 pass
             elif command == "search":
                 handle_search_contact(contact_manager)
             elif command == "all":
+                # Implement all functionality here if needed
                 pass
             else:
                 suggest_command(user_input)

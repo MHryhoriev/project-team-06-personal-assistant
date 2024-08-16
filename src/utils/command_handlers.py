@@ -10,6 +10,10 @@ def handle_add_contact(manager: ContactManager) -> None:
             print("Name cannot be empty.")
             return
 
+        if manager.search_by_name(name):
+            print(f"Contact with the name '{name}' already exists.")
+            return
+
         address = input("Enter address: ").strip()
         phone_number = input("Enter phone number: ").strip()
         email = input("Enter email: ").strip()
@@ -17,6 +21,7 @@ def handle_add_contact(manager: ContactManager) -> None:
 
         new_contact = Contact(name=name, address=address, phone_number=phone_number, email=email, birthday=birthday)
         manager.add_contact(new_contact)
+        print(f"Contact '{name}' successfully added.")
     except Exception as ex:
         print(f"An error occurred while adding the contact: {ex}")
 
@@ -31,9 +36,13 @@ def handle_search_contact(manager: ContactManager) -> None:
         "phone": manager.search_by_phone_number
     }
 
-    search_method = search_map.get(search_type, "")
+    search_method = search_map.get(search_type)
 
     if search_method:
+        if not query:
+            print("Search query cannot be empty.")
+            return
+
         try:
             results = search_method(query)
             if results:
@@ -49,17 +58,6 @@ def handle_search_contact(manager: ContactManager) -> None:
 
 @error_handler
 def handle_edit_contact(manager: ContactManager) -> None:
-    """
-    Handles the editing of an existing contact in the contact manager.
-
-    Prompts the user to enter the name of the contact to edit, and then allows the user to update
-    the contact's address, phone number, email, and birthday. It performs basic validation to ensure
-    that the name is not empty and attempts to update the contact in the manager.
-    If an error occurs during the process, it prints an appropriate error message.
-
-    Parameters:
-        manager (ContactManager): An instance of ContactManager to manage contacts.
-    """
     try:
         name = input("Enter the name of the contact to edit: ").strip()
         if not name:
@@ -88,3 +86,4 @@ def handle_edit_contact(manager: ContactManager) -> None:
             print(f"Contact {name} not found.")
     except Exception as ex:
         print(f"An error occurred while editing the contact: {ex}")
+
