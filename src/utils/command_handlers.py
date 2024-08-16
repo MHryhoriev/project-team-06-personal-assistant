@@ -92,7 +92,7 @@ def handle_edit_contact(manager: ContactManager) -> None:
         birthday = input("Enter new birthday (DD.MM.YYYY) (or press Enter to keep current): ").strip()
 
         updated_contact_data = manager.search_by_name(name)
-        if updated_contact is None:
+        if updated_contact_data is None:
             print(f"Contact with the name {name} not found.")
             return
       
