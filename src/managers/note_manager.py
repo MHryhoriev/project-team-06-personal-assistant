@@ -18,12 +18,12 @@ class NoteManager:
         self.storage = storage
         self.notes: List[Note] = self.storage.load_data()
           
-    def validate_note(self, note: Note) -> bool:
+    def validate_note(self, note: Note, min_title_length: int = 5) -> bool:
         """
         Validates the note's title and content
         """
-        if not note.title or len(note.title) < 5: #Number 5 is for example. Could be any number
-            print("Error: The title must not be empty and should have at least 5 characters.")
+        if not note.title or len(note.title) < min_title_length: #Number 5 is for example. Could be any number
+            print(f"Error: The title must not be empty and should have at least {min_title_length} characters.")
             return False
         if not note.content:
             print("Error: The content must not be empty.")
