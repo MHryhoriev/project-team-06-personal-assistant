@@ -59,24 +59,26 @@ class ContactManager:
         self.storage.save_data(self.contacts)
         print(f"Contact '{contact.name}' successfully added.")
         
-    def remove_contact(self, name: str) -> None:
+    def remove_contact(self, name: str) -> str:
         """
         Removes a contact from the list by name.
 
         This method searches through the list of contacts and removes the contact with the specified name.
-        If the contact is found, it is removed from the list and a success message is printed.
-        If the contact is not found, an error message is printed.
+        If the contact is found, it is removed from the list and a success message is returned.
+        If the contact is not found, an error message is returned.
 
         Args:
             name (str): The name of the contact to remove.
-        """
-        for contact in self.contacts: # Sorting through the contacts in the list
-            if contact.name == name: # Compare contacts
-                self.contacts.remove(contact) # The found contact is deleted
-                print(f"Contact {name} successfully deleted.")
-                return
 
-        print(f"Contact {name} not found.")
+        Returns:
+            str: A message indicating the result of the removal operation.
+        """
+        contact_to_remove = next((contact for contact in self.contacts if contact.name == name), None)
+        if contact_to_remove:
+            self.contacts.remove(contact_to_remove)
+            self.storage.save_data(self.contacts)
+            return f"Contact {name} successfully deleted."
+        return f"Contact {name} not found."
 
     def edit_contact(self, name: str, updated_contact: Contact) -> None:
         """
@@ -184,7 +186,7 @@ class ContactManager:
         """
         return self.contacts
 
-    def get_upcoming_birthdays(self, n_day: int=7) -> List:
+    def get_upcoming_birthdays(self, n_day: int=7) -> List[str]:
         """
         Retrieves a list of upcoming birthdays within a specified number of days.
 

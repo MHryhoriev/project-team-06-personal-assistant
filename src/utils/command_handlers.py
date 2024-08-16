@@ -2,7 +2,7 @@ from managers import ContactManager, NoteManager
 from models import Contact
 from utils.custom_decorators import error_handler
 from managers import note_manager
-from typing import List
+from typing import Optional
 
 @error_handler
 def handle_add_contact(manager: ContactManager) -> None:
@@ -16,22 +16,17 @@ def handle_add_contact(manager: ContactManager) -> None:
     Parameters:
         manager (ContactManager): An instance of ContactManager to manage contacts.
     """
-    try:
-        name = input("Enter name: ").strip()
-        if not name:
-            print("Name cannot be empty.")
-            return
+    name = _prompt_for_non_empty_name("Enter name: ")
+    if not name:
+        return
         
-        address = input("Enter address: ").strip()
-        phone_number = input("Enter phone number: ").strip()
-        email = input("Enter email: ").strip()
-        birthday = input("Enter birthday (DD-MM-YYYY): ").strip()
+    address = input("Enter address (or press Enter to skip): ").strip()
+    phone_number = input("Enter phone number (or press Enter to skip): ").strip()
+    email = input("Enter email (or press Enter to skip): ").strip()
+    birthday = input("Enter birthday (DD.MM.YYYY) (or press Enter to skip): ").strip()
 
-        new_contact = Contact(name=name, address=address, phone_number=phone_number, email=email, birthday=birthday)
-        manager.add_contact(new_contact)
-    except Exception as ex:
-        print(f"An error occurred while adding the contact: {ex}")
-
+    new_contact = Contact(name=name, address=address, phone_number=phone_number, email=email, birthday=birthday)
+    manager.add_contact(new_contact)
 
 @error_handler
 def handle_search_contact(manager: ContactManager) -> None:
@@ -71,6 +66,26 @@ def handle_search_contact(manager: ContactManager) -> None:
         print("Invalid search type. Please choose 'name', 'email', or 'phone'.")
 
 @error_handler
+def handle_remove_contact(manager: ContactManager) -> None:
+    """
+    Handles the removal of a contact from the contact manager.
+
+    Prompts the user to enter the name of the contact to be removed.
+    It then attempts to remove the contact from the manager. If the contact is successfully removed,
+    a success message is printed. If the contact is not found, an error message is displayed.
+
+    Parameters:
+        manager (ContactManager): An instance of ContactManager to manage contacts.
+    """
+    name = input("Enter the name of the contact to remove: ").strip()
+    if not name:
+        print("Name cannot be empty.")
+        return
+        
+    result = manager.remove_contact(name)
+    print(result)
+
+@error_handler
 def handle_show_all_notes(note_manager: NoteManager) -> str:
     """
     Handles the display of all notes from a Note object.
@@ -89,7 +104,8 @@ def handle_show_all_notes(note_manager: NoteManager) -> str:
         
     note_list = "\n".join(str(note) for note in all_notes)
     print(f"Notes:\n{note_list}")
-    
+
+@error_handler
 def handle_add_tag(manager: note_manager, note_id: int, tag: str) -> str:
     """
     Handles the logic for adding a tag to a note.
@@ -111,6 +127,7 @@ def handle_add_tag(manager: note_manager, note_id: int, tag: str) -> str:
     result = note_manager.add_tag(note_id, tag)
     return result
 
+@error_handler
 def handle_remove_tag(manager: note_manager, note_id: int, tag:str) -> str:
     """
     Handles the logic for removing a tag from a note.
@@ -133,6 +150,7 @@ def handle_remove_tag(manager: note_manager, note_id: int, tag:str) -> str:
     result = note_manager.remove_tag(note_id, tag)
     return result
 
+@error_handler
 def handle_show_all_contacts(manager: ContactManager) -> str:
     """
     Retrieves and formats all contacts from the ContactManager into a readable string.
@@ -151,3 +169,50 @@ def handle_show_all_contacts(manager: ContactManager) -> str:
         contact_list = "\n".join(str(contact) for contact in contacts)
         print(f"Contacts:\n{contact_list}")
         
+@error_handler
+def handle_upcoming_birthdays(manager: ContactManager) -> None:
+    """
+    Handles the retrieval and display of upcoming birthdays.
+
+    Prompts the user to enter the number of days to check for upcoming birthdays.
+    It then calls the get_upcoming_birthdays method and displays the results.
+
+    Args:
+        manager (ContactManager): An instance of ContactManager to manage contacts.
+    """
+    while True:
+        try:
+            n_day_input = input("Enter the number of days to check for upcoming birthdays: ").strip()
+            n_day = int(n_day_input)
+            if n_day <= 0:
+                print("Number of days must be positive. Please try again.")
+                continue
+            break
+        except ValueError:
+            print("Invalid input. Please enter a valid number.")
+    
+    upcoming_birthdays = manager.get_upcoming_birthdays(n_day)
+    
+    if upcoming_birthdays:
+        print("Upcoming birthdays:")
+        for birthday in upcoming_birthdays:
+            print(birthday)
+    else:
+        print("No upcoming birthdays within the specified period.")
+
+@error_handler
+def _prompt_for_non_empty_name(prompt: str) -> Optional[str]:
+    """
+    Prompts the user to enter a name and checks if it is non-empty.
+
+    Args:
+        prompt (str): The prompt message to display to the user.
+
+    Returns:
+        Optional[str]: The entered name if it is non-empty, otherwise None.
+    """
+    name = input(prompt).strip()
+    if not name:
+        print("Name cannot be empty.")
+        return None
+    return name
