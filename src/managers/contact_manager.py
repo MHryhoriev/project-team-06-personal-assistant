@@ -24,6 +24,7 @@ from datetime import datetime, timedelta, date
 from typing import List
 from models import Contact
 
+
 class ContactManager:
     def __init__(self, storage: ContactStorage) -> None:
         """
@@ -158,6 +159,9 @@ class ContactManager:
                     matching_contacts.append(contact)
 
         return matching_contacts
+    
+    def get_all_contacts(self) -> List[Contact]:
+        return self.contacts
 
     def get_upcoming_birthdays(self, n_day: int=7) -> List:
         """
