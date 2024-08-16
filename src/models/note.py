@@ -17,7 +17,7 @@ updated_at (Date): Date and time the note was last updated.
 
 from datetime import datetime
 from dataclasses import dataclass, asdict, field
-
+from typing import List
 from models.contact import Contact  # Assume Contact class is defined in 'contact.py'
 
 @dataclass
@@ -29,6 +29,7 @@ class Note:
     content: str = ""
     created_at: datetime = field(default_factory=datetime.now)
     updated_at:datetime = field(default_factory=datetime.now)
+    tags: List [str] = field(default_factory=list) #new field for tags
 
     def update_content(self, new_content: str) -> None:
         """
@@ -55,5 +56,6 @@ class Note:
             "contact": self.contact,
             "content": self.content,
             "created_at": self.created_at,
-            "updated_at": self.updated_at
+            "updated_at": self.updated_at,
+            "tags": self.tags #Include tags in dict.
         }
