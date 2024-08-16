@@ -5,7 +5,13 @@ from typing import Callable, Any
 def error_handler(func: Callable[..., Any]) -> Callable[..., Any]:
     """
     Decorator to handle errors in handlers.
-    Catches specific and unforeseen exceptions and displays an error message.
+    Catches specific and unforeseen exceptions and logs an error message.
+
+    Args:
+        func (Callable[..., Any]): The function to be decorated.
+
+    Returns:
+        Callable[..., Any]: The decorated function.
     """
     def inner(*args, **kwargs):
         try:
