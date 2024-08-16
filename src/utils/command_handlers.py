@@ -69,7 +69,7 @@ def handle_search_contact(manager: ContactManager) -> None:
     else:
         print("Invalid search type. Please choose 'name', 'email', or 'phone'.")
 
-def display_all_contacts(manager: ContactManager) -> None:
+def display_all_contacts(manager: ContactManager) -> str:
     """
     Displays all contacts in a readable format. Shows a message if there are no contacts.
     """
@@ -78,7 +78,5 @@ def display_all_contacts(manager: ContactManager) -> None:
     if not contacts:
         print("No contacts available.")
     else:
-        print("All Contacts:")
-        for contact in contacts:
-            print(f"ID: {contact.id}, Name: {contact.name}, Address: {contact.address}, "
-                  f"Phone: {contact.phone_number}, Email: {contact.email}, Birthday: {contact.birthday}")
+        contact_list = "\n".join(str(contact) for contact in contacts)
+        print(f"Contacts:\n{contact_list}")
