@@ -6,8 +6,7 @@ from utils import (
     handle_show_all_notes,
     handle_remove_contact,
     handle_show_all_contacts,
-    handle_upcoming_birthdays,
-    handle_edit_contact
+    handle_upcoming_birthdays
 )
 from storage import ContactStorage, NoteStorage
 from constants import CONTACT_DATA_FILE_PATH, NOTE_DATA_FILE_PATH
