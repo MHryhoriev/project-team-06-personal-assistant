@@ -295,10 +295,63 @@ def handle_search_notes(manager: note_manager) -> None:
 
             else:
                 print("No notes found.")
-        except Exception as ex:
+        except Exception as ex: 
             print(f"An error occured during the search: {ex}")
 
         else:
             print("Invalid search type. Please choose 'title', 'content', or 'tag'.")
+
+@error_handler
+def handler_edit_note(manager: note_manager) -> None:
+    """
+    Handles the editing of an existing note in the note manager.
+
+    Prompts the user to enter the title of the note to be edited and the new details for the note.
+    It then attempts to update the note in the manager. Before updating, it validates the note.
+    If the note is successfully updated, a success message is printed. If the note is not found,
+    validation fails, or an error occurs, an error message is displayed.
+
+    Args:
+        manager (note_manager): An instance of Note Manager to manage notes.
+         
+    """
+    try:
+        # Promprt for the note title and esures it is not empty
+        title = input("Enter the title of the note to edit: ").strip()
+        if not title:
+           print("Title cannot be empty.")
+           return
+        
+        new_content = input("Enter new content (or press Enter to keep current): ").strip()
+        new_tags = input("Enter new tags, separated by commas (or press Enter to keep current): ").strip().split(',')
+
+        note_to_edit = manager.search_by_title(title)
+        if note_to_edit is None:
+            print(f"Note with the title '{title}' not found.")
+            return
+        
+        if new_content:
+            note_to_edit['content'] = new_content
+        if new_tags:
+            note_to_edit['tags'] = [tag.strip() for tag in new_tags if tag.strip()]
+
+        #validate note before editing
+        if not manager.validate_note(note_to_edit):
+            print("Note validation failed. Please check details and try again.")
+            return
+        
+        #update note
+        manager.edit_note(title, note_to_edit)
+
+        #ensure the updated note is written to the file
+        manager.save_notes_to_file()
+
+        print(f"Note titled '{title}' has been successfully updated.")
+
+    except Exception as ex:
+        print(f"An error occurred while editing the note: {ex}")
+
+
+
 
 
