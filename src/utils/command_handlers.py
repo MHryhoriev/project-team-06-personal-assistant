@@ -260,3 +260,45 @@ def _prompt_for_non_empty_name(prompt: str) -> Optional[str]:
         print("Name cannot be empty.")
         return None
     return name
+
+@error_handler
+def handle_search_notes(manager: note_manager) -> None:
+    """
+    Handles the search for notes based on the specified search type.
+
+    Prompts the user to select a search type ('title', 'content', or 'tag') and enter the search query.
+    It then performs the search using the appropriate method from the NoteManager and displays the results.
+    If an error occurs during the search, it prints an appropriate error message.
+
+    Parameters:
+        manager (NoteManager): An instance of NoteManager to manage notes.
+    """
+
+    search_type = input("Search by (title/content/tag): " ).strip().lower()
+    query = input("Enter the search query: ").strip()
+
+    search_map = {
+        "title": manager.search_by_title,
+        "content": manager.search_by_content,
+        "tag": manager.search_by_tag
+    }
+
+    search_method = search_map.get(search_type, "")
+
+    if search_method:
+        try:
+            results = search_method (query)
+            if results:
+                print(f"Found {len(results)} note(s):")
+                for note in results:
+                    print(note)
+
+            else:
+                print("No notes found.")
+        except Exception as ex:
+            print(f"An error occured during the search: {ex}")
+
+        else:
+            print("Invalid search type. Please choose 'title', 'content', or 'tag'.")
+
+
