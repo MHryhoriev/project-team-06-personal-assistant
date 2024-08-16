@@ -48,19 +48,13 @@ class ContactManager:
 
         Parameters:
             contact (Contact): The contact to be added to the list. Must be an instance of the Contact class.
-        
-        Returns:
-            None
         """
-
-        # Check if contact with the same name already exists
         if self.contacts:
             for existing_contact in self.contacts:
                 if existing_contact.name == contact.name:
                     print(f"Contact with the name '{contact.name}' already exists.")
                     return
         
-        # Add the new contact to the list
         self.contacts.append(contact)
         self.storage.save_data(self.contacts)
         print(f"Contact '{contact.name}' successfully added.")
@@ -68,6 +62,13 @@ class ContactManager:
     def remove_contact(self, name: str) -> None:
         """
         Removes a contact from the list by name.
+
+        This method searches through the list of contacts and removes the contact with the specified name.
+        If the contact is found, it is removed from the list and a success message is printed.
+        If the contact is not found, an error message is printed.
+
+        Args:
+            name (str): The name of the contact to remove.
         """
         for contact in self.contacts: # Sorting through the contacts in the list
             if contact.name == name: # Compare contacts
@@ -79,16 +80,21 @@ class ContactManager:
 
     def edit_contact(self, name: str, updated_contact: Contact) -> None:
         """
-        Changes information about a contact.
+        Updates the information of an existing contact.
+
+        This method searches for a contact by its name, validates the new phone number and email, 
+        and updates the contact's information if found. If the contact is not found, it prints an error message.
+
+        Args:
+            name (str): The name of the contact to be updated.
+            updated_contact (Contact): An instance of the Contact class with updated information.
         """
-        # Find the contact by name
         for i, contact in enumerate(self.contacts):
             if contact.name == name:
                 # Validate the updated phone number and email
                 contact._validate_phone_number(updated_contact.phone_number)
                 contact._validate_email(updated_contact.email)
                 
-                # Update the contact information
                 self.contacts[i] = updated_contact
                 self.storage.save_data(self.contacts)
                 print(f"Contact {name} updated successfully.")
@@ -127,7 +133,16 @@ class ContactManager:
 
     def search_by_email(self, email: str) -> List[Contact]:
         """
-        Search for contacts by email.
+        Searches for contacts by email address.
+
+        This method searches through the list of contacts and returns a list of contacts 
+        where the specified email address is found within the contact's email.
+
+        Args:
+            email (str): The email address or partial email to search for.
+
+        Returns:
+            List[Contact]: A list of contacts that have the specified email address or a matching partial email.
         """
         matching_contacts = []
         #search for contacts with matching email
@@ -148,11 +163,9 @@ class ContactManager:
         Returns:
         - list of dict: A list of contacts whose phone numbers match the search query.
         """
-        # Initialize an empty list to hold matching contacts
         matching_contacts = []
 
-        # Iterate over each contact in the contacts list
-        if self.contacts: # Skip if list is empty
+        if self.contacts:
             for contact in self.contacts:
                 # Check if the phone number part of the contact matches the search query
                 if str(phone_number) in contact.phone_number:
@@ -161,19 +174,39 @@ class ContactManager:
         return matching_contacts
     
     def get_all_contacts(self) -> List[Contact]:
+        """
+        Retrieves all contacts from the contact list.
+
+        This method returns the entire list of contacts stored in the contact manager.
+
+        Returns:
+            List[Contact]: A list of all contacts.
+        """
         return self.contacts
 
     def get_upcoming_birthdays(self, n_day: int=7) -> List:
         """
-        A list of birthdays for a specified period of time
+        Retrieves a list of upcoming birthdays within a specified number of days.
+
+        This method checks the birthdays of all contacts and returns those that fall within 
+        the specified number of days from the current date. If a birthday has already occurred 
+        this year, it is considered for the next year.
+
+        Args:
+            n_days (int): The number of days from today to check for upcoming birthdays. 
+                        Default is 7 days.
+
+        Returns:
+            List[str]: A list of strings with each string containing the contact's name and 
+                    their upcoming birthday date.
         """
-        res = [] # Create an empty list
+        res = []
         if self.contacts: 
-            to_date = date.today() # Let's find out what day it is today
+            to_date = date.today()
             for contact in self.contacts: # We go through the contacts and pike up birthdays, transferring the day to the desired format
                 birthday = datetime.strptime(contact.birthday, "%d.%m.%Y").replace(year=to_date.year).date()
                 if birthday < to_date: # Check if the date of birth has passed
-                    birthday = birthday.replace(year=to_date.year+1) #
+                    birthday = birthday.replace(year=to_date.year+1)
                 if to_date <= birthday <= (to_date + timedelta(days=n_day)): # Check if the date of birth falls within a given period of days
-                    res.append(f"name: {contact.name}, congratulation_date: {birthday.strftime('%d.%m.%Y')}\n") # Add the found date
-        return res # Return the list of birthdays
+                    res.append(f"name: {contact.name}, congratulation_date: {birthday.strftime('%d.%m.%Y')}\n")
+        return res

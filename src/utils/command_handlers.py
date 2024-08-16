@@ -133,9 +133,15 @@ def handle_remove_tag(manager: note_manager, note_id: int, tag:str) -> str:
     result = note_manager.remove_tag(note_id, tag)
     return result
 
-def display_all_contacts(manager: ContactManager) -> str:
+def handle_show_all_contacts(manager: ContactManager) -> str:
     """
-    Displays all contacts in a readable format. Shows a message if there are no contacts.
+    Retrieves and formats all contacts from the ContactManager into a readable string.
+
+    Args:
+        manager (ContactManager): An instance of ContactManager that contains the contacts.
+
+    Returns:
+        str: A formatted string of all contacts or a message indicating no contacts are available.
     """
     contacts = manager.get_all_contacts()
     

@@ -31,65 +31,146 @@ class Contact:
         self._validate_phone_number(phone_number)
         self._validate_email(email)
 
-    # Getter and setter for id
     @property
     def id(self) -> int:
+        """
+        Gets the contact ID.
+
+        Returns:
+            int: The contact ID.
+        """
         return self.__id
 
     @id.setter
     def id(self, value: int) -> None:
+        """
+        Sets the contact ID.
+
+        Args:
+            value (int): The contact ID.
+        """
         self.__id = value
 
-    # Getter and setter for name
     @property
     def name(self) -> str:
+        """
+        Gets the contact name.
+
+        Returns:
+            str: The contact name.
+        """
         return self.__name
 
     @name.setter
     def name(self, value: str) -> None:
+        """
+        Sets the contact name.
+
+        Args:
+            value (str): The contact name.
+        """
         self.__name = value
 
-    # Getter and setter for address
     @property
     def address(self) -> str:
+        """
+        Gets the contact address.
+
+        Returns:
+            str: The contact address.
+        """
         return self.__address
 
     @address.setter
     def address(self, value: str) -> None:
+        """
+        Sets the contact address.
+
+        Args:
+            value (str): The contact address.
+        """
         self.__address = value
 
-    # Getter and setter for phone_number with validation
     @property
     def phone_number(self) -> str:
+        """
+        Gets the contact phone number.
+
+        Returns:
+            str: The contact phone number.
+        """
         return self.__phone_number
 
     @phone_number.setter
     def phone_number(self, value: str) -> None:
+        """
+        Sets the contact phone number with validation.
+
+        Args:
+            value (str): The contact phone number.
+
+        Raises:
+            ValueError: If the phone number is invalid.
+        """
         self._validate_phone_number(value)
         self.__phone_number = value
 
-    # Getter and setter for email with validation
     @property
     def email(self) -> str:
+        """
+        Gets the contact email.
+
+        Returns:
+            str: The contact email.
+        """
         return self.__email
 
     @email.setter
     def email(self, value: str) -> None:
+        """
+        Sets the contact email with validation.
+
+        Args:
+            value (str): The contact email.
+
+        Raises:
+            ValueError: If the email is invalid.
+        """
         self._validate_email(value)
         self.__email = value
 
-    # Getter and setter for birthday
     @property
     def birthday(self) -> str:
+        """
+        Gets the contact birthday.
+
+        Returns:
+            str: The contact birthday.
+        """
         return self.__birthday
 
     @birthday.setter
     def birthday(self, value: str) -> None:
+        """
+        Sets the contact birthday.
+
+        Args:
+            value (str): The contact birthday.
+        """
         self.__birthday = value
 
     def _validate_phone_number(self, phone_number: str) -> None:
         """
-        Validates the phone number format.
+        Validates the format of a phone number.
+
+        This method checks if the provided phone number adheres to a specific format for Ukrainian phone numbers.
+        It raises a `ValueError` if the phone number does not match the expected format.
+
+        Args:
+            phone_number (str): The phone number to be validated.
+
+        Raises:
+            ValueError: If the phone number does not conform to the expected format.
         """
         pattern = r'^(?:\+380|0)[\d]{9,12}$'  # Example pattern for Ukrainian numbers
         if not re.match(pattern, phone_number):
@@ -97,10 +178,20 @@ class Contact:
 
     def _validate_email(self, email: str) -> None:
         """
-        Validates the email address format.
+        Validates the format of an email address.
+
+        This method checks if the provided email address adheres to a standard email format. 
+        It raises a `ValueError` if the email is empty or does not match the expected format.
+
+        Args:
+            email (str): The email address to be validated.
+
+        Raises:
+            ValueError: If the email address is empty or does not conform to the expected email format.
         """
         if not email:
             raise ValueError("Email address cannot be empty.")
+        
         pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'  # Updated pattern for email validation
         if not re.match(pattern, email):
             raise ValueError(f"Invalid email address: {email}. Expected format: example@domain.com")
