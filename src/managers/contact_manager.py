@@ -2,7 +2,6 @@
 
 Task: Develop a ContactManager class that will be responsible for managing all contacts.
 
-‌
 
 Fields:
 
@@ -20,10 +19,11 @@ search_by_phone_number(phone_number: str): Search for contacts by phone number.
 """
 
 import re
-import os
 from storage import ContactStorage
+from datetime import datetime, timedelta, date
 from typing import List
 from models import Contact
+
 
 class ContactManager:
     def __init__(self, storage: ContactStorage) -> None:
@@ -69,7 +69,13 @@ class ContactManager:
         """
         Removes a contact from the list by name.
         """
-        raise NotImplementedError("The 'remove_contact' method is not implemented.")
+        for contact in self.contacts: # Sorting through the contacts in the list
+            if contact.name == name: # Compare contacts
+                self.contacts.remove(contact) # The found contact is deleted
+                print(f"Contact {name} successfully deleted.")
+                return
+
+        print(f"Contact {name} not found.")
 
     def edit_contact(self, name: str, updated_contact: Contact) -> None:
         """
@@ -111,7 +117,7 @@ class ContactManager:
             pattern = re.compile(re.escape(name), re.IGNORECASE)
             matching_contacts = [contact for contact in self.contacts if pattern.search(contact.name)]
             
-            return matching_contacts
+            return matching_contacts # A list of notes s that match the search query.
         
         except re.error as e:
             raise RuntimeError(f"An error occurred while processing the search pattern: {e}")
@@ -128,7 +134,7 @@ class ContactManager:
         for contact in self.contacts:
             if email in contact.email:
                 matching_contacts.append(contact)
-        # return the list of matching contacts        
+        # retrun the list of matching contacts        
         return matching_contacts
 
     def search_by_phone_number(self, phone_number: str) -> List[Contact]:
@@ -153,3 +159,21 @@ class ContactManager:
                     matching_contacts.append(contact)
 
         return matching_contacts
+    
+    def get_all_contacts(self) -> List[Contact]:
+        return self.contacts
+
+    def get_upcoming_birthdays(self, n_day: int=7) -> List:
+        """
+        A list of birthdays for a specified period of time
+        """
+        res = [] # Create an empty list
+        if self.contacts: 
+            to_date = date.today() # Let's find out what day it is today
+            for contact in self.contacts: # We go through the contacts and pike up birthdays, transferring the day to the desired format
+                birthday = datetime.strptime(contact.birthday, "%d.%m.%Y").replace(year=to_date.year).date()
+                if birthday < to_date: # Check if the date of birth has passed
+                    birthday = birthday.replace(year=to_date.year+1) #
+                if to_date <= birthday <= (to_date + timedelta(days=n_day)): # Check if the date of birth falls within a given period of days
+                    res.append(f"name: {contact.name}, congratulation_date: {birthday.strftime('%d.%m.%Y')}\n") # Add the found date
+        return res # Return the list of birthdays

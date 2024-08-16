@@ -2,6 +2,7 @@ from managers import ContactManager
 from models import Contact
 from utils.custom_decorators import error_handler
 from managers import note_manager
+from typing import List
 
 @error_handler
 def handle_add_contact(manager: ContactManager) -> None:
@@ -68,7 +69,6 @@ def handle_search_contact(manager: ContactManager) -> None:
             print(f"An error occurred during the search: {ex}")
     else:
         print("Invalid search type. Please choose 'name', 'email', or 'phone'.")
- 
 
 def handle_add_tag(manager: note_manager, note_id: int, tag: str) -> str:
     """
@@ -112,6 +112,15 @@ def handle_remove_tag(manager: note_manager, note_id: int, tag:str) -> str:
     
     result = note_manager.remove_tag(note_id, tag)
     return result
- 
-  
-   
+
+def display_all_contacts(manager: ContactManager) -> str:
+    """
+    Displays all contacts in a readable format. Shows a message if there are no contacts.
+    """
+    contacts = manager.get_all_contacts()
+    
+    if not contacts:
+        print("No contacts available.")
+    else:
+        contact_list = "\n".join(str(contact) for contact in contacts)
+        print(f"Contacts:\n{contact_list}")
