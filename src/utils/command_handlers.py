@@ -19,7 +19,7 @@ def handle_add_contact(manager: ContactManager) -> None:
     name = _prompt_for_non_empty_name("Enter name: ")
     if not name:
         return
-      
+
     if manager.search_by_name(name):
         print(f"Contact with the name '{name}' already exists.")
         return
@@ -95,7 +95,7 @@ def handle_edit_contact(manager: ContactManager) -> None:
         if updated_contact_data is None:
             print(f"Contact with the name {name} not found.")
             return
-      
+
         if address:
             updated_contact_data['address'] = address
         if phone_number:
@@ -150,7 +150,7 @@ def handle_show_all_notes(note_manager: NoteManager) -> str:
     print(f"Notes:\n{note_list}")
 
 @error_handler
-def handle_add_tag(manager: note_manager, note_id: int, tag: str) -> str:
+def handle_add_tag(manager: NoteManager, tag: str = "", note_id: int = 0) -> str:
     """
     Handles the logic for adding a tag to a note.
 
@@ -162,17 +162,26 @@ def handle_add_tag(manager: note_manager, note_id: int, tag: str) -> str:
     Returns:
         str: A message indicating the result of the operation.
     """
+    if tag and note_id:
+        if manager.add_tag(note_id, tag):
+            f"The '{tag}' tag has been added to notes with id '{note_id}"
+        
+    note_name = input("Please, enter the Note name or title: ").strip().lower()
+    tag = input("Please, enter the tag name: ").strip()
+    
+    if note_name:
+        note_list = manager.search_notes(note_name)
+    
     if not isinstance(note_id, int) or note_id <= 0:
         return "Invalid note ID."
     
     if not tag or not isinstance(tag, str):
         return "Invalid tag. Please provide a valid tag string."
-    
-    result = note_manager.add_tag(note_id, tag)
-    return result
+        
+    return "\n".join([manager.add_tag(note.id, tag)  for note in note_list])
 
 @error_handler
-def handle_remove_tag(manager: note_manager, note_id: int, tag:str) -> str:
+def handle_remove_tag(manager: NoteManager, note_id: int, tag:str) -> str:
     """
     Handles the logic for removing a tag from a note.
 
@@ -184,15 +193,24 @@ def handle_remove_tag(manager: note_manager, note_id: int, tag:str) -> str:
     Returns:
         str: A message indicating the result of the operation.
     """
-
-    if not isinstance (note_id, int) or note_id <= 0:
-      return "Invalid note ID."
+    
+    if tag and note_id:
+        if manager.add_tag(note_id, tag):
+            f"The '{tag}' tag has been deleted to notes with id '{note_id}"
+        
+    note_name = input("Please, enter the Note name or title: ").strip().lower()
+    tag = input("Please, enter the tag name: ").strip()
+    
+    if note_name:
+        note_list = manager.search_notes(note_name)
+    
+    if not isinstance(note_id, int) or note_id <= 0:
+        return "Invalid note ID."
     
     if not tag or not isinstance(tag, str):
-      return "Invalid tag. Please provide a valid tag string."
+        return "Invalid tag. Please provide a valid tag string."
     
-    result = note_manager.remove_tag(note_id, tag)
-    return result
+    return "\n".join([manager.remove_tag(note.id, tag)  for note in note_list])
 
 @error_handler
 def handle_show_all_contacts(manager: ContactManager) -> str:
