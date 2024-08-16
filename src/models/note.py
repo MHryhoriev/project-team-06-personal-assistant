@@ -59,3 +59,7 @@ class Note:
             "updated_at": self.updated_at,
             "tags": self.tags #Include tags in dict.
         }
+
+    # Temporary solution
+    def __str__(self) -> str:
+        return f"ID: {self.id}, Title: {self.title}, Contact: {self.contact}, Content: {self.content}, Created_at: {self.created_at}, Updated_at: {self.updated_at}"

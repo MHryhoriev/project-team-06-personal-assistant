@@ -1,4 +1,4 @@
-from managers import ContactManager
+from managers import ContactManager, NoteManager
 from models import Contact
 from utils.custom_decorators import error_handler
 from managers import note_manager
@@ -70,6 +70,26 @@ def handle_search_contact(manager: ContactManager) -> None:
     else:
         print("Invalid search type. Please choose 'name', 'email', or 'phone'.")
 
+@error_handler
+def handle_show_all_notes(note_manager: NoteManager) -> str:
+    """
+    Handles the display of all notes from a Note object.
+
+    Args:
+        note (Note): An instance of the Note class containing the data.
+
+    Returns:
+        str: A formatted string displaying all notes or a message if no notes are available.
+    """
+    
+    all_notes = note_manager.get_all_notes()
+    if not all_notes:
+        print("No notes available.")
+        return
+        
+    note_list = "\n".join(str(note) for note in all_notes)
+    print(f"Notes:\n{note_list}")
+    
 def handle_add_tag(manager: note_manager, note_id: int, tag: str) -> str:
     """
     Handles the logic for adding a tag to a note.
@@ -124,3 +144,4 @@ def display_all_contacts(manager: ContactManager) -> str:
     else:
         contact_list = "\n".join(str(contact) for contact in contacts)
         print(f"Contacts:\n{contact_list}")
+        

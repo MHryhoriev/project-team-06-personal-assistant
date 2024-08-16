@@ -1,5 +1,5 @@
 from managers import ContactManager, NoteManager
-from utils import parse_input, handle_add_contact, handle_search_contact
+from utils import parse_input, handle_add_contact, handle_search_contact, handle_show_all_notes
 from storage import ContactStorage, NoteStorage
 from constants import CONTACT_DATA_FILE_PATH, NOTE_DATA_FILE_PATH
 from prompt_toolkit import PromptSession
@@ -38,6 +38,8 @@ def main():
                 handle_search_contact(contact_manager)
             elif command == "all":
                 pass
+            elif command == "all_notes":
+                handle_show_all_notes(note_manager)
             else:
                 suggest_command(user_input)
 

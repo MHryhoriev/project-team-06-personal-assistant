@@ -137,6 +137,9 @@ class NoteManager:
             )
         
         return sorted_notes
+    
+    def get_all_notes(self) -> List[Note]:
+        return self.notes
       
      def add_tag(self, note_id: int, tag: str) -> str:
         """

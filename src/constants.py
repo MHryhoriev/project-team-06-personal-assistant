@@ -10,4 +10,4 @@ CONTACT_DATA_FILE_PATH = BASE_DIR.joinpath('data', 'contacts_data.json')
 NOTE_DATA_FILE_PATH = BASE_DIR.joinpath('data', 'note.json')
 
 # List of valid commands for the application
-COMMANDS = ["add", "search", "remove", "exit", "close", "all"]
+COMMANDS = ["add", "search", "remove", "exit", "close", "all", "all_notes"]
