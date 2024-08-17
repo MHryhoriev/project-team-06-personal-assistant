@@ -49,12 +49,24 @@ class Note:
         """
         Converts the Note object into a dictionary.
 
+        This method serializes the Note object into a dictionary format, converting datetime fields into ISO format strings and including all fields such as 'id', 'title', 'contact', 'content', 'created_at', 'updated_at', and 'tags'.
+
         Returns:
-            dict: A dictionary representation of the Note object where keys are
-                the contact attributes (e.g., 'id', 'title', 'contact', 'content', 'created_at', 'updated_at')
-                and values are their respective values.
+            dict: A dictionary representation of the Note object, where keys are:
+                - 'id': The unique identifier of the note (int).
+                - 'title': The title of the note (str).
+                - 'contact': The contact associated with the note (str).
+                - 'content': The content of the note (str).
+                - 'created_at': The creation timestamp of the note, serialized to ISO format if it's a datetime object (str or datetime).
+                - 'updated_at': The last update timestamp of the note, serialized to ISO format if it's a datetime object (str or datetime).
+                - 'tags': A list of tags associated with the note (List[str]).
         """
-        return asdict(self)
+        note_dict = asdict(self)
+    
+        note_dict["created_at"] = self.created_at.isoformat() if isinstance(self.created_at, datetime) else self.created_at
+        note_dict["updated_at"] = self.updated_at.isoformat() if isinstance(self.updated_at, datetime) else self.updated_at
+
+        return note_dict
 
     def add_tag(self, tag: str) -> bool:
         """The method adds the tag to instance tags list

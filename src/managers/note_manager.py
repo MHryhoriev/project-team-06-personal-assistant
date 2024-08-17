@@ -33,23 +33,34 @@ class NoteManager:
 
     def validate_note(self, note: Note, min_title_length: int = 5) -> bool:
         """
-        Validates the title and content of a Note object.
+        Validates the title, content, and contact of a Note object.
 
-        This method checks whether the note's title meets the minimum length requirement and ensures that the content is not empty.
+        This method checks whether the note's title meets the minimum length requirement, 
+        ensures that the content and contact are not empty, and returns validation results.
 
         Args:
             note (Note): The Note object to be validated.
             min_title_length (int, optional): The minimum length required for the title. Default is 5 characters.
 
         Returns:
-            bool: True if the note is valid (title and content meet the requirements), False otherwise.
+            bool: True if the note is valid (title, content, and contact meet the requirements), False otherwise.
         """
-        if not note.title or len(note.title) < min_title_length:
-            print(f"Error: The title must not be empty and should have at least {min_title_length} characters.")
+        errors = {
+            "title": f"The title must not be empty and should have at least {min_title_length} characters.",
+            "content": "The content must not be empty.",
+            "contact": "The contact must not be empty."
+        }
+
+        if len(note.title or '') < min_title_length:
+            print(f"Error: {errors['title']}")
             return False
         if not note.content:
-            print("Error: The content must not be empty.")
+            print(f"Error: {errors['content']}")
             return False
+        if not note.contact:
+            print(f"Error: {errors['contact']}")
+            return False
+
         return True
     
     def add_note(self, note: Note) -> None:
@@ -69,6 +80,7 @@ class NoteManager:
                 return
             
         self.notes.append(note)
+        self.storage.save_data(self.notes)
         print(f"Success: Note titled '{note.title}' successfully added.")
 
     def search_notes(self, query: str) -> List[Note]:
