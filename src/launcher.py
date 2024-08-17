@@ -15,7 +15,8 @@ from utils import (
     handle_remove_note,
     handle_edit_note,
     handle_add_tag,
-    handle_remove_tag
+    handle_remove_tag,
+    handle_sort_notes_by_tags
 )
 
 def initialize_managers() -> tuple[ContactManager, NoteManager]:
@@ -58,6 +59,7 @@ def handle_command(command: str, contact_manager: ContactManager, note_manager: 
         COMMAND.ALL_CONTACTS: lambda: handle_show_all_contacts(contact_manager),
         COMMAND.ALL_NOTES: lambda: handle_show_all_notes(note_manager),
         COMMAND.CHECK_BIRTHDAYS: lambda: handle_upcoming_birthdays(contact_manager),
+        COMMAND.SORT_NOTES: lambda: handle_sort_notes_by_tags(note_manager),
         COMMAND.HELP: lambda: show_help(COMMAND_DESCRIPTIONS),
         COMMAND.EXIT: lambda: exit_program()
     }

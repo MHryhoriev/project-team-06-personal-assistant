@@ -19,6 +19,7 @@ class COMMAND:
     ALL_NOTES = "all_notes"
     ALL_CONTACTS = "all_contacts"
     CHECK_BIRTHDAYS = "check_birthdays"
+    SORT_NOTES = "sort_notes"
     EXIT = "exit"
     HELP = "help"
 
@@ -38,6 +39,7 @@ COMMANDS = [
     COMMAND.ALL_NOTES,
     COMMAND.ALL_CONTACTS,
     COMMAND.CHECK_BIRTHDAYS,
+    COMMAND.SORT_NOTES,
     COMMAND.EXIT,
     COMMAND.HELP
 ]
@@ -57,6 +59,7 @@ COMMAND_DESCRIPTIONS = {
     COMMAND.ALL_NOTES: "Show all notes",
     COMMAND.ALL_CONTACTS: "Show all contacts",
     COMMAND.CHECK_BIRTHDAYS: "Check upcoming birthdays",
+    COMMAND.SORT_NOTES: "Sorting notes",
     COMMAND.EXIT: "Exit the application",
     COMMAND.HELP: "Show available commands"
 }

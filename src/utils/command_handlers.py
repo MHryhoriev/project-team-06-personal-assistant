@@ -445,6 +445,16 @@ def handle_remove_note(manager: NoteManager) -> None:
 
 @error_handler
 def handle_sort_notes_by_tags(manager: NoteManager) -> None:
+    """
+    Handles sorting of notes by their tags and displays them.
+
+    Prompts the user to specify the sort order and then sorts the notes by their tags
+    in the specified order. The method prints the details of each note including
+    all fields such as title, content, tags, and updated timestamp.
+
+    Args:
+        manager (NoteManager): An instance of Note Manager to manage notes.
+    """
     print("How would you like to sort the notes by tags?")
     sort_order = input("Enter 'asc' for ascending or 'desc' for descending: ").strip().lower()
 
@@ -452,8 +462,10 @@ def handle_sort_notes_by_tags(manager: NoteManager) -> None:
         print("Invalid sort order. Please enter 'asc' or 'desc'.")
         return
 
-    sorted_notes = manager.sort_notes_by_tags(order=sort_order)
+    sorted_notes = manager.sort_by_tags(order=sort_order)
 
     print("\nSorted notes by tags:")
     for note in sorted_notes:
-        print(f"Title: {note.title}, Tags: {', '.join(note.tags)}")
+        note_dict = note.to_dict()
+        print(f"Title: {note_dict['title']}, Tags: {', '.join(note_dict['tags'])}, Content: {note_dict['content']}, Created At: {note_dict['created_at']}, Updated At: {note_dict['updated_at']}")
+        print("-" * 40)
