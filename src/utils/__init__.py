@@ -12,7 +12,8 @@ from .command_handlers import (
     handle_remove_note,
     handle_edit_note,
     handle_add_tag,
-    handle_remove_tag
+    handle_remove_tag,
+    handle_sort_notes_by_tags
 )
 from .custom_decorators import error_handler
 from .suggestion_utils import suggest_command, completer

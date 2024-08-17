@@ -442,3 +442,18 @@ def handle_remove_note(manager: NoteManager) -> None:
     
     result = manager.remove_note(title)
     print(result)
+
+@error_handler
+def handle_sort_notes_by_tags(manager: NoteManager) -> None:
+    print("How would you like to sort the notes by tags?")
+    sort_order = input("Enter 'asc' for ascending or 'desc' for descending: ").strip().lower()
+
+    if sort_order not in ['asc', 'desc']:
+        print("Invalid sort order. Please enter 'asc' or 'desc'.")
+        return
+
+    sorted_notes = manager.sort_notes_by_tags(order=sort_order)
+
+    print("\nSorted notes by tags:")
+    for note in sorted_notes:
+        print(f"Title: {note.title}, Tags: {', '.join(note.tags)}")
