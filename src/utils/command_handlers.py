@@ -164,6 +164,7 @@ def handle_add_tag(manager: NoteManager, tag: str = "", note_id: int = 0) -> Non
     """
     if tag and note_id:
         print(manager.add_tag(note_id, tag))
+        return
         
     note_name = input("Please, enter the Note name or title: ").strip().lower()
     tag = input("Please, enter the tag name: ").strip()
@@ -195,6 +196,7 @@ def handle_remove_tag(manager: NoteManager, note_id: int, tag:str) -> None:
     
     if tag and note_id:
         print(manager.remove_tag(note_id, tag))
+        return
         
     note_name = input("Please, enter the Note name or title: ").strip().lower()
     tag = input("Please, enter the tag name: ").strip()
