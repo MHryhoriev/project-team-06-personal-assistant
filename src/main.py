@@ -1,62 +1,23 @@
-from managers import ContactManager, NoteManager
-from utils import (
-    parse_input,
-    handle_add_contact,
-    handle_search_contact,
-    handle_show_all_notes,
-    handle_remove_contact,
-    handle_show_all_contacts,
-    handle_upcoming_birthdays,
-    handle_edit_contact,
-    handle_add_note
-)
-from storage import ContactStorage, NoteStorage
-from constants import CONTACT_DATA_FILE_PATH, NOTE_DATA_FILE_PATH
+from launcher import initialize_managers, handle_command
+from utils import parse_input, completer
+from constants import COMMAND_DESCRIPTIONS
 from prompt_toolkit import PromptSession
-from utils import suggest_command, completer
 
 def main():
     """
     Main entry point for the Contact Manager console application.
     Initializes the ContactManager and provides a command-line interface for the user.
     """
-    contact_storage = ContactStorage(file_path=CONTACT_DATA_FILE_PATH)
-    contact_manager = ContactManager(storage=contact_storage)
-
-    note_storage = NoteStorage(file_path=NOTE_DATA_FILE_PATH)
-    note_manager = NoteManager(storage=note_storage)
+    contact_manager, note_manager = initialize_managers()
 
     print("Welcome to the Contact Manager!")
-
     session = PromptSession(completer=completer)
 
     while True:
         try:
-            user_input = session.prompt("Enter a command (add_contact/add_note/edit_contact/remove_contact/search_contact/all_contacts/all_notes/check_birthdays): ")
+            user_input = session.prompt("Enter a command: ")
             command, *args = parse_input(user_input)
-
-            if command in ["exit", "close"]:
-                print("Good bye!")
-                break
-            elif command == "add_contact":
-                handle_add_contact(contact_manager)
-            elif command == "add_note":
-                handle_add_note(note_manager)
-            elif command == "edit_contact":
-                handle_edit_contact(contact_manager)
-            elif command == "remove_contact":
-                handle_remove_contact(contact_manager)
-            elif command == "search_contact":
-                handle_search_contact(contact_manager)
-            elif command == "all_contacts":
-                handle_show_all_contacts(contact_manager)
-            elif command == "all_notes":
-                handle_show_all_notes(note_manager)
-            elif command == "check_birthdays":
-                handle_upcoming_birthdays(contact_manager)
-            else:
-                suggest_command(user_input)
-
+            handle_command(command, contact_manager, note_manager)
         except KeyboardInterrupt:
             print("\nGood bye!")
             break
