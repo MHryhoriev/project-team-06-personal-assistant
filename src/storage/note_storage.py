@@ -20,7 +20,7 @@ class NoteStorage(Storage[Note]):
         Side effects:
             Prints an error message to the console if any required fields are missing.
         """
-        required_fields = {"id", "title", "contact", "content", "created_at", "updated_at"}
+        required_fields = {"id", "title", "contact", "content", "created_at", "updated_at", "tags"}
         missing_fields = required_fields - data.keys()
         if missing_fields:
             print(f"Missing fields in note data: {missing_fields}")
