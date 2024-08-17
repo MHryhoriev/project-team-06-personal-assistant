@@ -7,7 +7,8 @@ from utils import (
     handle_remove_contact,
     handle_show_all_contacts,
     handle_upcoming_birthdays,
-    handle_edit_contact
+    handle_edit_contact,
+    handle_add_note
 )
 from storage import ContactStorage, NoteStorage
 from constants import CONTACT_DATA_FILE_PATH, NOTE_DATA_FILE_PATH
@@ -31,7 +32,7 @@ def main():
 
     while True:
         try:
-            user_input = session.prompt("Enter a command (add_contact/edit_contact/remove_contact/search_contact/all_contacts/all_notes/check_birthdays): ")
+            user_input = session.prompt("Enter a command (add_contact/add_note/edit_contact/remove_contact/search_contact/all_contacts/all_notes/check_birthdays): ")
             command, *args = parse_input(user_input)
 
             if command in ["exit", "close"]:
@@ -39,6 +40,8 @@ def main():
                 break
             elif command == "add_contact":
                 handle_add_contact(contact_manager)
+            elif command == "add_note":
+                handle_add_note(note_manager)
             elif command == "edit_contact":
                 handle_edit_contact(contact_manager)
             elif command == "remove_contact":
