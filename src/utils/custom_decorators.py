@@ -1,30 +1,42 @@
-"""The module for custom decorators"""
-
+import logging
 from typing import Callable, Any
+
+logging.basicConfig(level=logging.ERROR, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+logger = logging.getLogger(__name__)
 
 def error_handler(func: Callable[..., Any]) -> Callable[..., Any]:
     """
-    Decorator to handle errors in handlers.
+    Decorator to handle and log errors in handlers.
     Catches specific and unforeseen exceptions and logs an error message.
 
     Args:
         func (Callable[..., Any]): The function to be decorated.
 
     Returns:
-        Callable[..., Any]: The decorated function.
+        Callable[..., Any]: The decorated function with error handling.
     """
-    def inner(*args, **kwargs):
+    def wrapper(*args, **kwargs):
         try:
             return func(*args, **kwargs)
         except ValueError:
-            print("Please enter the name.")
+            message = "A ValueError occurred. Please provide the required input."
+            logger.error("ValueError in function '%s': %s", func.__name__, message)
+            print(message)
         except IndexError:
-            print("To many names, try the command 'all' to investigate.")
+            message = "An IndexError occurred. The input seems to be incorrect or too many entries were provided."
+            logger.error("IndexError in function '%s': %s", func.__name__, message)
+            print(message)
         except KeyError:
-            print("Enter the correct name please, try the command 'all' to investigate.")
+            message = "A KeyError occurred. The specified key is missing or incorrect."
+            logger.error("KeyError in function '%s': %s", func.__name__, message)
+            print(message)
         except NotImplementedError as nie:
-            print(f"NotImplementedError in {func.__name__}: {nie}")
+            message = f"A NotImplementedError occurred: {nie}"
+            logger.error("NotImplementedError in function '%s': %s", func.__name__, message)
+            print(message)
         except Exception as un_err:
-            print(f"Unexpected error in {func.__name__}: {un_err}")
+            message = f"An unexpected error occurred: {un_err}"
+            logger.error("Unexpected error in function '%s': %s", func.__name__, message)
+            print(message)
         
-    return inner
+    return wrapper

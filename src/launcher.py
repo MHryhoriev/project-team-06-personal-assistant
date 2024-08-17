@@ -1,7 +1,7 @@
 from managers import ContactManager, NoteManager
 from storage import ContactStorage, NoteStorage
 from constants import CONTACT_DATA_FILE_PATH, NOTE_DATA_FILE_PATH, COMMAND, COMMAND_DESCRIPTIONS
-from utils import suggest_command
+from prettytable import PrettyTable
 from utils import (
     handle_add_contact,
     handle_search_contact,
@@ -16,7 +16,8 @@ from utils import (
     handle_edit_note,
     handle_add_tag,
     handle_remove_tag,
-    handle_sort_notes_by_tags
+    handle_sort_notes_by_tags,
+    suggest_command
 )
 
 def initialize_managers() -> tuple[ContactManager, NoteManager]:
@@ -77,10 +78,14 @@ def show_help(available_commands: dict) -> None:
     Args:
         available_commands (dict): A dictionary of available commands and descriptions.
     """
-    print("\nAvailable commands:")
-    max_length = max(len(cmd) for cmd in available_commands.keys())
+    table = PrettyTable()
+    table.field_names = ["Command", "Description"]
+
     for cmd, description in available_commands.items():
-        print(f"  {cmd.ljust(max_length)} : {description}")
+        table.add_row([cmd, description])
+    
+    print("\nAvailable commands:")
+    print(table)
     print()
 
 def exit_program() -> None:
