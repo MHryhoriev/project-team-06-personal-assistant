@@ -26,9 +26,9 @@ class Note:
     title: str = ""
     contact: Contact.name = ""
     content: str = ""
+    tags: List[str] = field(default_factory=list)
     created_at: datetime = field(default_factory=datetime.now)
     updated_at:datetime = field(default_factory=datetime.now)
-    tags: List [str] = field(default_factory=list) #new field for tags
     
     def __repr__(self) -> str:
         return str(asdict(self))

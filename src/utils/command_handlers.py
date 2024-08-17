@@ -1,8 +1,9 @@
 from managers import ContactManager, NoteManager
 from models import Contact, Note
 from utils.custom_decorators import error_handler
-from managers import note_manager
 from typing import Optional
+from prettytable import PrettyTable
+from typing import List, Dict, Any
 
 @error_handler
 def handle_add_contact(manager: ContactManager) -> None:
@@ -60,8 +61,7 @@ def handle_search_contact(manager: ContactManager) -> None:
             results = search_method(query)
             if results:
                 print(f"Found {len(results)} contact(s):")
-                for contact in results:
-                    print(contact)
+                _print_contacts(results)
             else:
                 print("No contacts found.")
         except Exception as ex:
@@ -146,9 +146,8 @@ def handle_show_all_notes(note_manager: NoteManager) -> None:
     if not all_notes:
         print("No notes available.")
         return
-        
-    note_list = "\n".join(str(note) for note in all_notes)
-    print(f"Notes:\n{note_list}")
+    
+    _print_notes(all_notes)
 
 @error_handler
 def handle_add_tag(manager: NoteManager) -> None:
@@ -214,7 +213,6 @@ def handle_remove_tag(manager: NoteManager) -> None:
     for note in note_list:
         manager.remove_tag(note.id, tag)
 
-
 @error_handler
 def handle_show_all_contacts(manager: ContactManager) -> None:
     """
@@ -226,13 +224,13 @@ def handle_show_all_contacts(manager: ContactManager) -> None:
     Returns:
         None: Prints A formatted string of all contacts or a message indicating no contacts are available.
     """
-    contacts = manager.get_all_contacts()
+    contacts = manager.get_all_contacts() 
     
     if not contacts:
         print("No contacts available.")
-    else:
-        contact_list = "\n".join(str(contact) for contact in contacts)
-        print(f"Contacts:\n{contact_list}")
+        return
+    
+    _print_contacts(contacts)
         
 @error_handler
 def handle_upcoming_birthdays(manager: ContactManager) -> None:
@@ -257,32 +255,12 @@ def handle_upcoming_birthdays(manager: ContactManager) -> None:
             print("Invalid input. Please enter a valid number.")
     
     upcoming_birthdays = manager.get_upcoming_birthdays(n_day)
-    
-    if upcoming_birthdays:
-        print("Upcoming birthdays:")
-        for birthday in upcoming_birthdays:
-            print(birthday)
-    else:
+
+    if not upcoming_birthdays:
         print("No upcoming birthdays within the specified period.")
-
-@error_handler
-def handler_search_notes_by_tag(manager: NoteManager, tag: str) -> None:
-    """
-    Handles the display of all notes from a NoteManager object filtered by tags.
-
-    Args:
-        tag (str): An instance of the Note class containing the data.
-
-    Returns:
-        None: Prints A formatted string displaying filtered notes or a message if no notes are available.
-    """
-    all_notes = manager.search_notes_by_tag(tag)
-    if not all_notes:
-        print("No notes available.")
         return
-        
-    note_list = "\n".join(str(note) for note in all_notes)
-    print(f"Notes:\n{note_list}")
+
+    _print_upcoming_birthdays(upcoming_birthdays)
 
 @error_handler
 def handle_add_note(manager: NoteManager) -> None:
@@ -366,8 +344,7 @@ def handle_search_notes(manager: NoteManager) -> None:
             results = search_method(query)
             if results:
                 print(f"Found {len(results)} note(s):")
-                for note in results:
-                    print(note)
+                _print_notes(results)
             else:
                 print("No notes found.")
         except Exception as ex: 
@@ -440,8 +417,7 @@ def handle_remove_note(manager: NoteManager) -> None:
         print ("Title cannot be empty.")
         return
     
-    result = manager.remove_note(title)
-    print(result)
+    manager.remove_note(title)
 
 @error_handler
 def handle_sort_notes_by_tags(manager: NoteManager) -> None:
@@ -464,8 +440,68 @@ def handle_sort_notes_by_tags(manager: NoteManager) -> None:
 
     sorted_notes = manager.sort_by_tags(order=sort_order)
 
-    print("\nSorted notes by tags:")
+    _print_sorted_notes(sorted_notes)
+
+def _print_sorted_notes(sorted_notes: List[Any]) -> None:
+    """
+    Prints a table of sorted notes by tags.
+
+    Args:
+        sorted_notes (List[Any]): List of notes sorted by tags.
+    """
+    table_sorted_notes = PrettyTable()
+    table_sorted_notes.field_names = ["Title", "Content", "Tags", "Updated"]
+
     for note in sorted_notes:
-        note_dict = note.to_dict()
-        print(f"Title: {note_dict['title']}, Tags: {', '.join(note_dict['tags'])}, Content: {note_dict['content']}, Created At: {note_dict['created_at']}, Updated At: {note_dict['updated_at']}")
-        print("-" * 40)
+        tags_str = ", ".join(note.tags)
+        table_sorted_notes.add_row([note.title, note.content, tags_str, note.updated_at])
+
+    print("\nSorted notes by tags:")
+    print(table_sorted_notes)
+
+def _print_upcoming_birthdays(upcoming_birthdays: List[Dict[str, str]]) -> None:
+    """
+    Prints a table of upcoming birthdays.
+
+    Args:
+        upcoming_birthdays (List[Dict[str, str]]): List of dictionaries containing birthday details.
+    """
+    table_birthdays = PrettyTable()
+    table_birthdays.field_names = ["Name", "Birthday"]
+
+    for birthday in upcoming_birthdays:
+        table_birthdays.add_row([birthday['name'], birthday['congratulation_date']])
+
+    print("\nUpcoming birthdays:")
+    print(table_birthdays)
+
+def _print_contacts(contacts: List[Any]) -> None:
+    """
+    Prints a table of contacts.
+
+    Args:
+        contacts (List[Any]): List of contact objects.
+    """
+    table_contacts = PrettyTable()
+    table_contacts.field_names = ["Name", "Address", "Phone Number", "Email", "Birthday"]
+
+    for contact in contacts:
+        table_contacts.add_row([contact.name, contact.address, contact.phone_number, contact.email, contact.birthday])
+
+    print(table_contacts)
+
+def _print_notes(notes: List[Any]) -> None:
+    """
+    Prints a table of all notes.
+
+    Args:
+        all_notes (List[Any]): List of all notes.
+    """
+    table_notes = PrettyTable()
+    table_notes.field_names = ["ID", "Title", "Contact", "Content", "Tags", "Created At", "Updated At"]
+
+    for note in notes:
+        tags_str = ", ".join(note.tags)
+        table_notes.add_row([note.id, note.title, note.contact, note.content, tags_str, note.created_at, note.updated_at])
+
+    print(table_notes)

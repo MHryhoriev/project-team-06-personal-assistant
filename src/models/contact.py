@@ -14,42 +14,28 @@ email (string): Email address of the contact. The format must be validated with 
 birthday (datetime.date): Date of birth of the prospect.
 """
 
-
 import re
+from dataclasses import dataclass, field, asdict
+from typing import Optional
+from datetime import date, datetime
 
+@dataclass
 class Contact:
-    def __init__(self, id: int = 0, name: str = '', address: str = '',
-                 phone_number: str = '', email: str = '', birthday: str = '') -> None:
-        self.__id: int = id
-        self.__name: str = name
-        self.__address: str = address
-        self.__phone_number: str = phone_number
-        self.__email: str = email
-        self.__birthday: str = birthday
-        
-        # Validate phone number and email
-        self._validate_phone_number(phone_number)
-        self._validate_email(email)
+    name: str
+    address: str
+    phone_number: str
+    email: str
+    birthday: str
+    birthday: Optional[str] = field(default=None)
 
-    @property
-    def id(self) -> int:
-        """
-        Gets the contact ID.
+    def __post_init__(self):
+        # Validate phone number and email after initialization
+        self._validate_phone_number(self.phone_number)
+        self._validate_email(self.email)
 
-        Returns:
-            int: The contact ID.
-        """
-        return self.__id
-
-    @id.setter
-    def id(self, value: int) -> None:
-        """
-        Sets the contact ID.
-
-        Args:
-            value (int): The contact ID.
-        """
-        self.__id = value
+        # Validate birthday if it is provided
+        if self.birthday:
+            self._validate_birthday(self.birthday)
 
     @property
     def name(self) -> str:
@@ -195,24 +181,37 @@ class Contact:
         pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'  # Updated pattern for email validation
         if not re.match(pattern, email):
             raise ValueError(f"Invalid email address: {email}. Expected format: example@domain.com")
+    
+    def _validate_birthday(self, birthday: str) -> None:
+        """
+        Validates the birthday field.
 
+        This method checks if the provided birthday string is in the correct format (DD.MM.YYYY),
+        converts it to a `date` object, and ensures that the birthday is not in the future. If any 
+        of these conditions fail, a `ValueError` is raised.
+
+        Args:
+            birthday (str): The birthday in DD.MM.YYYY format to be validated.
+
+        Raises:
+            ValueError: If the birthday is not a valid date or if it is in the future.
+        """
+        try:
+            birthday_date = datetime.strptime(birthday, '%d.%m.%Y').date()
+        except ValueError:
+            raise ValueError(f"Invalid birthday format: {birthday}. Expected format: DD.MM.YYYY")
+        
+        if birthday_date > date.today():
+            raise ValueError("Birthday cannot be in the future.")
 
     def to_dict(self) -> dict:
         """
         Converts the Contact object into a dictionary.
 
         Returns:
-            dict: A dictionary representation of the Contact object where keys are
-                the contact attributes (e.g., 'name', 'address', 'phone_number', 'email', 'birthday')
-                and values are their respective values.
+            dict: A dictionary representation of the Contact object.
         """
-        return {
-            "name": self.name,
-            "address": self.address,
-            "phone_number": self.phone_number,
-            "email": self.email,
-            "birthday": self.birthday
-        }
+        return asdict(self)
     
     def __str__(self) -> str:
         return f"Name: {self.__name}, Address: {self.__address}, Phone: {self.__phone_number}, Email: {self.__email}, Birthday: {self.__birthday}"
