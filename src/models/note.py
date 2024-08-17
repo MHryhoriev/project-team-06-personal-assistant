@@ -54,7 +54,15 @@ class Note:
                 the contact attributes (e.g., 'id', 'title', 'contact', 'content', 'created_at', 'updated_at')
                 and values are their respective values.
         """
-        return asdict(self)
+        return {
+            "id": self.id,
+            "title": self.title,
+            "contact": self.contact,
+            "content": self.content,
+            "created_at": self.created_at,
+            "updated_at": self.updated_at,
+            "tags": self.tags #Include tags in dict.
+        }
 
     def add_tag(self, tag: str) -> bool:
         """The method adds the tag to instance tags list
