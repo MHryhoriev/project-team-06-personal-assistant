@@ -22,7 +22,6 @@ from models.contact import Contact  # Assume Contact class is defined in 'contac
 
 @dataclass
 class Note:
-    
     id: int = 0
     title: str = ""
     contact: Contact.name = ""
@@ -36,13 +35,28 @@ class Note:
     
         # Temporary solution
     def __str__(self) -> str:
-        return f"ID: {self.id}, Title: {self.title}, Contact: {self.contact}, Content: {self.content}, Created_at: {self.created_at}, Updated_at: {self.updated_at}"
-    
-    def update_content(self, new_content: str) -> None:
+        return f"ID: {self.id}, Title: {self.title}, Contact: {self.contact}, Content: {self.content}, Created_at: {self.created_at}, Updated_at: {self.updated_at}, Tags: {self.tags}"
+
+    def update_content_and_tag(self, new_content: str, new_tags: List[str]) -> None:
         """
-        Update the content of the note and set the updated_at timestamp to the current time.
+        Updates the content and tags of the note and sets the updated_at timestamp to the current time.
+
+        This method modifies the note's content and tags based on the provided values. If `new_content` 
+        is provided, it updates the note's content with the new content. If `new_tags` is provided, it 
+        updates the note's tags with the new tags. After updating the content and tags, the method updates 
+        the `updated_at` timestamp to the current date and time to reflect the modification.
+
+        Args:
+            new_content (str): The new content to update in the note. If an empty string is provided, the content will not be changed.
+            new_tags (List[str]): A list of new tags to set for the note. If an empty list is provided, the tags will not be changed.
+
+        Returns:
+            None: This method does not return any value. It modifies the note object in place.
         """
-        self.content = new_content
+        if new_content:
+            self.content = new_content
+        if new_tags:
+            self.tags = new_tags
         self.updated_at = datetime.now()
 
     def to_dict(self) -> dict:
@@ -67,33 +81,3 @@ class Note:
         note_dict["updated_at"] = self.updated_at.isoformat() if isinstance(self.updated_at, datetime) else self.updated_at
 
         return note_dict
-
-    def add_tag(self, tag: str) -> bool:
-        """The method adds the tag to instance tags list
-
-        Args:
-            tag (str): The tag name.
-            
-        Returns:
-            bool: True if self.tags has new tags otherwise False
-        """
-        if tag and tag not in self.tags:
-            self.tags.append(tag)
-            return tag in self.tags
-        return False
-    
-    
-    def delete_tag(self, tag: str) -> bool:
-        """The method deletes the tag from the instance tags list
-
-        Args:
-            tag (str): The tag name.
-            
-        Returns:
-            bool: True if self.tags has new tags otherwise False
-        """
-        if tag in self.tags:
-            index = self.tags.index(tag)
-            del self.tags[index]
-            return tag in self.tags
-        return False
