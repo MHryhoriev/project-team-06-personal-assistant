@@ -210,5 +210,5 @@ class ContactManager:
                 if birthday < to_date: # Check if the date of birth has passed
                     birthday = birthday.replace(year=to_date.year+1)
                 if to_date <= birthday <= (to_date + timedelta(days=n_day)): # Check if the date of birth falls within a given period of days
-                    res.append(f"name: {contact.name}, congratulation_date: {birthday.strftime('%d.%m.%Y')}\n")
+                    res.append({"name": contact.name, "congratulation_date": birthday.strftime('%d.%m.%Y')})
         return res

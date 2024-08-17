@@ -142,21 +142,26 @@ class NoteManager:
 
     def remove_note(self, title: str) -> None:
         """
-        Deletes a note with the specified note_id from the list of notes.
+        Deletes a note with the specified title from the list of notes.
 
-        This method iterates through the list of notes and removes the note that matches
-        the provided note_id. If the note is found, it is deleted and a success message 
-        is displayed. If no note with the specified ID is found, an error message is displayed.
+        This method searches for a note in the list that matches the provided title. If the note is found,
+        it is removed from the list, and the updated list of notes is saved using the storage system.
+        A success message is displayed upon successful deletion. If no note with the specified title is found,
+        an error message is displayed.
 
         Args:
-            note_id (int): The ID of the note to be deleted.
+            title (str): The title of the note to be deleted.
+
+        Raises:
+            ValueError: If no note with the specified title is found, an error message is printed.
         """
         note_to_remove = next((note for note in self.notes if note.title == title), None)
         if note_to_remove:
             self.notes.remove(note_to_remove)
             self.storage.save_data(self.notes)
-            return f"Note '{title}' successfully deleted."
-        return f"Note '{title}' not found."
+            print(f"Note '{title}' successfully deleted.")
+        else:
+            print(f"Note '{title}' not found.")
 
     def search_by_tag(self, tag: str) -> List[Note]:
         """
