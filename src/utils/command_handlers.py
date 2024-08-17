@@ -110,6 +110,7 @@ def handle_edit_contact(manager: ContactManager) -> None:
     except Exception as ex:
         print(f"An error occurred while editing the contact: {ex}")
 
+@error_handler
 def handle_remove_contact(manager: ContactManager) -> None:
     """
     Handles the removal of a contact from the contact manager.
@@ -150,65 +151,69 @@ def handle_show_all_notes(note_manager: NoteManager) -> None:
     print(f"Notes:\n{note_list}")
 
 @error_handler
-def handle_add_tag(manager: NoteManager, tag: str = "", note_id: int = 0) -> None:
+def handle_add_tag(manager: NoteManager) -> None:
     """
-    Handles the logic for adding a tag to a note.
+    Handles the logic for adding a tag to notes matching a specified title.
 
     Args:
-        note_manager (NoteManager): The manager responsible for note operations.
-        note_id (int): The ID of the note to which the tag will be added.
-        tag (str): The tag to be added to the note.
+        manager (NoteManager): The manager responsible for note operations.
 
     Returns:
-        None: Prints A message indicating the result of the operation.
+        None: Prints messages indicating the result of the operation.
     """
-    if tag and note_id:
-        print(manager.add_tag(note_id, tag))
-        
-    note_name = input("Please, enter the Note name or title: ").strip().lower()
+    title = input("Please, enter the Note title: ").strip().lower()
     tag = input("Please, enter the tag name: ").strip()
-    
-    if note_name:
-        note_list = manager.search_notes(note_name)
-    
-    if not isinstance(note_id, int) or note_id <= 0:
-        print("Invalid note ID.")
-    
+
+    # Validate tag input
     if not tag or not isinstance(tag, str):
         print("Invalid tag. Please provide a valid tag string.")
-        
-    print("\n".join([manager.add_tag(note.id, tag)  for note in note_list]))
+        return
+
+    if not title:
+        print("Note title cannot be empty.")
+        return
+
+    # Search for notes by title
+    note_list = manager.search_by_title(title)
+    if not note_list:
+        print("No notes found with the given title.")
+        return
+
+    for note in note_list:
+        manager.add_tag(note.id, tag)
 
 @error_handler
-def handle_remove_tag(manager: NoteManager, note_id: int, tag:str) -> None:
+def handle_remove_tag(manager: NoteManager) -> None:
     """
-    Handles the logic for removing a tag from a note.
+    Handles the logic for removing a tag from notes matching a specified title.
 
     Args:
-        note_manager (NoteManager): The manager responsible for note operations.
-        note_id (int): The ID of the note from which the tag will be removed.
-        tag (str): The tag to be removed from the note.
+        manager (NoteManager): The manager responsible for note operations.
 
     Returns:
-        None: Prints A message indicating the result of the operation.
+        None: Prints messages indicating the result of the operation.
     """
-    
-    if tag and note_id:
-        print(manager.remove_tag(note_id, tag))
-        
-    note_name = input("Please, enter the Note name or title: ").strip().lower()
-    tag = input("Please, enter the tag name: ").strip()
-    
-    if note_name:
-        note_list = manager.search_notes(note_name)
-    
-    if not isinstance(note_id, int) or note_id <= 0:
-        print("Invalid note ID.")
-    
+    note_name = input("Please, enter the Note title for removing: ").strip().lower()
+    tag = input("Please, enter the tag name for removing: ").strip()
+
+    # Validate inputs
     if not tag or not isinstance(tag, str):
         print("Invalid tag. Please provide a valid tag string.")
-    
-    print("\n".join([manager.remove_tag(note.id, tag)  for note in note_list]))
+        return
+
+    if not note_name:
+        print("Note title cannot be empty.")
+        return
+
+    # Search for notes by title
+    note_list = manager.search_by_title(note_name)
+    if not note_list:
+        print("No notes found with the given title.")
+        return
+
+    for note in note_list:
+        manager.remove_tag(note.id, tag)
+
 
 @error_handler
 def handle_show_all_contacts(manager: ContactManager) -> None:
@@ -261,7 +266,7 @@ def handle_upcoming_birthdays(manager: ContactManager) -> None:
         print("No upcoming birthdays within the specified period.")
 
 @error_handler
-def handler_search_notes_by_tag(self, manager: NoteManager, tag: str) -> None:
+def handler_search_notes_by_tag(manager: NoteManager, tag: str) -> None:
     """
     Handles the display of all notes from a NoteManager object filtered by tags.
 
@@ -279,6 +284,7 @@ def handler_search_notes_by_tag(self, manager: NoteManager, tag: str) -> None:
     note_list = "\n".join(str(note) for note in all_notes)
     print(f"Notes:\n{note_list}")
 
+@error_handler
 def handle_add_note(manager: NoteManager) -> None:
     """
     Handles the addition of a new note to the note manager.
@@ -291,9 +297,9 @@ def handle_add_note(manager: NoteManager) -> None:
         manager (NoteManager): An instance of NoteManager to manage notes.
     """
     
-    title = input("Enter note title (or press Enter to skip): ").strip()
-    contact = input("Enter contact name (or press Enter to skip): ").strip()
-    content = input("Enter note content (or press Enter to skip): ").strip()
+    title = input("Enter note title: ").strip()
+    contact = input("Enter contact name: ").strip()
+    content = input("Enter note content: ").strip()
 
     # Create a temporary note for validation
     temp_note = Note(
@@ -333,11 +339,11 @@ def _prompt_for_non_empty_input(field_name: str, prompt: str) -> Optional[str]:
     return value
 
 @error_handler
-def handle_search_notes(manager: note_manager) -> None:
+def handle_search_notes(manager: NoteManager) -> None:
     """
     Handles the search for notes based on the specified search type.
 
-    Prompts the user to select a search type ('title', 'content', or 'tag') and enter the search query.
+    Prompts the user to select a search type ('title' or 'tag') and enter the search query.
     It then performs the search using the appropriate method from the NoteManager and displays the results.
     If an error occurs during the search, it prints an appropriate error message.
 
@@ -345,12 +351,11 @@ def handle_search_notes(manager: note_manager) -> None:
         manager (NoteManager): An instance of NoteManager to manage notes.
     """
 
-    search_type = input("Search by (title/content/tag): " ).strip().lower()
+    search_type = input("Search by (title/tag): " ).strip().lower()
     query = input("Enter the search query: ").strip()
 
     search_map = {
         "title": manager.search_by_title,
-        "content": manager.search_by_content,
         "tag": manager.search_by_tag
     }
 
@@ -363,17 +368,15 @@ def handle_search_notes(manager: note_manager) -> None:
                 print(f"Found {len(results)} note(s):")
                 for note in results:
                     print(note)
-
             else:
                 print("No notes found.")
         except Exception as ex: 
             print(f"An error occured during the search: {ex}")
-
-        else:
-            print("Invalid search type. Please choose 'title', 'content', or 'tag'.")
+    else:
+        print("Invalid search type. Please choose 'title' or 'tag'.")
 
 @error_handler
-def handler_edit_note(manager: note_manager) -> None:
+def handle_edit_note(manager: NoteManager) -> None:
     """
     Handles the editing of an existing note in the note manager.
 
@@ -393,18 +396,23 @@ def handler_edit_note(manager: note_manager) -> None:
            print("Title cannot be empty.")
            return
         
-        new_content = input("Enter new content (or press Enter to keep current): ").strip()
-        new_tags = input("Enter new tags, separated by commas (or press Enter to keep current): ").strip().split(',')
+        # Fetch the list of notes matching the title
+        notes_list = manager.search_by_title(title)
+        if not notes_list:
+            print(f"No notes found with the title '{title}'.")
+            return
 
-        note_to_edit = manager.search_by_title(title)
-        if note_to_edit is None:
-            print(f"Note with the title '{title}' not found.")
+        # Assume that we want to edit the first matching note
+        note_to_edit = notes_list[0]
+        if not isinstance(note_to_edit, Note):
+            print("The retrieved object is not a Note instance.")
             return
         
-        if new_content:
-            note_to_edit['content'] = new_content
-        if new_tags:
-            note_to_edit['tags'] = [tag.strip() for tag in new_tags if tag.strip()]
+        new_content = input("Enter new content (or press Enter to keep current): ").strip()
+        new_tags_input = input("Enter new tags, separated by commas (or press Enter to keep current): ").strip()
+        new_tags = [tag.strip() for tag in new_tags_input.split(',') if tag.strip()]
+        
+        note_to_edit.update_content_and_tag(new_content, new_tags)
 
         #validate note before editing
         if not manager.validate_note(note_to_edit):
@@ -412,18 +420,13 @@ def handler_edit_note(manager: note_manager) -> None:
             return
         
         #update note
-        manager.edit_note(title, note_to_edit)
-
-        #ensure the updated note is written to the file
-        manager.save_notes_to_file()
-
-        print(f"Note titled '{title}' has been successfully updated.")
+        manager.edit_note(note_to_edit.id, note_to_edit)
 
     except Exception as ex:
         print(f"An error occurred while editing the note: {ex}")
 
 @error_handler
-def handle_delete_note(manager: note_manager) -> None:
+def handle_remove_note(manager: NoteManager) -> None:
     """
     Handles the removal of a note for the manager.
 
@@ -432,18 +435,10 @@ def handle_delete_note(manager: note_manager) -> None:
     a success message is printed. If note is note found, an error message to be displayed. 
     
     """
-    title = input("Enter the title of the note to delete: ").strip()
+    title = input("Enter the title of the note to remove: ").strip()
     if not title:
         print ("Title cannot be empty.")
         return
     
-    try:
-        result = manager.delete_note(title)
-        if result:
-            # Make sure the deleted note is moved from the file
-            manager.save_notes_to_file()
-            print(f"Note titled '{title}' has been successfully deleted.")
-        else:
-            print(f"Note title '{title}' not found.")
-    except Exception as ex:
-        print(f"An error occurred while deleting the note: {ex}")
+    result = manager.remove_note(title)
+    print(result)

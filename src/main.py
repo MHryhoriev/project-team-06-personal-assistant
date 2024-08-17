@@ -1,6 +1,5 @@
 from launcher import initialize_managers, handle_command
 from utils import parse_input, completer
-from constants import COMMAND_DESCRIPTIONS
 from prompt_toolkit import PromptSession
 
 def main():

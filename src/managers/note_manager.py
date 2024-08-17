@@ -18,7 +18,6 @@ class NoteManager:
         self.storage = storage
         self.notes: List[Note] = self.storage.load_data()
         
-        
     def get_note_by_id(self, note_id: int) -> Note:
         """Method returns note by it`s id
         
@@ -83,7 +82,7 @@ class NoteManager:
         self.storage.save_data(self.notes)
         print(f"Success: Note titled '{note.title}' successfully added.")
 
-    def search_notes(self, query: str) -> List[Note]:
+    def search_by_title(self, query: str) -> List[Note]:
         """
         Searches for notes by title or content and returns a list of matching notes.
 
@@ -121,27 +120,27 @@ class NoteManager:
         """
         Updates a note with the specified note_id with new data.
 
-        This method searches through the list of notes and updates the content of the note 
-        that matches the provided note_id. If the note is found, its content is updated and 
-        a success message is displayed. If no note with the specified ID is found, an error 
-        message is displayed.
+        This method searches for the note with the given note_id and updates its content and tags
+        using the data provided in the `updated_note` object. After updating, the method saves the 
+        changes to storage and displays a success message. If no note with the specified ID is found, 
+        an error message is displayed.
 
         Args:
             note_id (int): The ID of the note to be updated.
-            updated_note (Note): A Note object containing the updated content.
+            updated_note (Note): A Note object containing the updated content and tags.
 
-        Raises:
-            NotImplementedError: If the note with the specified ID is not found.
+        Returns:
+            None: Prints a message indicating the result of the operation.
         """
-        for note in self.notes:
-            if note.id == note_id:
-                note.updated_content(updated_note.content)
-                print(f"Note {note_id} updated successfully.")
-                return
-        
-        print(f"Note with the name {note_id} not found.")
+        note = self.get_note_by_id(note_id)
+        if note:
+            note.update_content_and_tag(updated_note.content, updated_note.tags)
+            self.storage.save_data(self.notes)
+            print(f"Note '{note.title}' updated successfully.")
+        else:
+            print(f"Note with id {note_id} not found.")
 
-    def delete_note(self, note_id: int) -> None:
+    def remove_note(self, title: str) -> None:
         """
         Deletes a note with the specified note_id from the list of notes.
 
@@ -152,15 +151,14 @@ class NoteManager:
         Args:
             note_id (int): The ID of the note to be deleted.
         """
-        for note in self.notes: # Sorting through the note in the list
-            if note.id == note_id: # Compare note id
-                self.notes.remove(note) # Delete the found note
-                print(f"Note {note_id} successfully deleted.")
-                return
-        
-        print(f"Note {note_id} not found.")
+        note_to_remove = next((note for note in self.notes if note.title == title), None)
+        if note_to_remove:
+            self.notes.remove(note_to_remove)
+            self.storage.save_data(self.notes)
+            return f"Note '{title}' successfully deleted."
+        return f"Note '{title}' not found."
 
-    def search_notes_by_tag(self, tag: str) -> List[Note]:
+    def search_by_tag(self, tag: str) -> List[Note]:
         """
         Searches for notes that contain the specified tag.
 
@@ -180,7 +178,7 @@ class NoteManager:
 
         return [note for note in self.notes if tag in note.tags]
 
-    def sort_notes_by_tags(self, order: str = 'asc') -> List[Note]:
+    def sort_by_tags(self, order: str = 'asc') -> List[Note]:
         """
         Sort the notes by the number of tags and then alphabetically by tags.
         
@@ -226,53 +224,70 @@ class NoteManager:
         """
         return self.notes
 
-    def add_tag(self, note_id: int, tag: str) -> str:
+    def add_tag(self, note_id: int, tag: str) -> None:
         """
         Adds a tag to the note with the specified note_id.
 
-        This method finds the note by its ID and adds the given tag to it. If the note is found and the tag is successfully added,
-        the note collection is updated and saved. If the note is not found, an error message is returned.
+        This method finds the note by its ID and adds the given tag to its tags list. The note collection is updated
+        and saved after adding the tag. If the note is not found, an error message is returned.
 
         Args:
             note_id (int): The ID of the note to which the tag will be added.
             tag (str): The tag to add to the note.
 
         Returns:
-            str: A message indicating the result of the operation. If the note is found and the tag is added, a success message is returned.
-                If the note is not found, an error message is returned.
+            None: Prints a message indicating the result of the operation.
         """
+        # Find the note by its ID
         note = self.get_note_by_id(note_id)
-        if note:
-            if note.add_tag(tag):
-                self.storage.save_data(self.notes)
-                if self.is_note_tag_in_storage(note.id, tag):
-                    return f"Tag has been added to the Note with id {note_id}."
-                return f"Tag has not been added to the Note with id {note_id} at the storage."
-        return f"Note with id {note_id} not found."
+        if not note:
+            print(f"Note with id {note_id} not found.")
+        
+        # Add the tag to the note's tags list if it's not already present
+        if tag and tag not in note.tags:
+            note.tags.append(tag)
+            self.storage.save_data(self.notes)
+            
+            # Verify if the tag has been successfully added to the storage
+            if self.is_note_tag_in_storage(note_id, tag):
+                print(f"Tag '{tag}' has been added to the Note with id {note.title}.")
+            else:
+                print(f"Tag '{tag}' has not been added to the Note with id {note.title} in the storage.")
+        elif tag in note.tags:
+            print(f"Tag '{tag}' already exists for the Note with id {note.title}.")
+        else:
+            print("Invalid tag. Please provide a valid tag string.")
     
-    def remove_tag (self, note_id: int, tag: str) -> str:
+    def remove_tag(self, note_id: int, tag: str) -> None:
         """
         Removes a tag from the note with the specified note_id.
 
-        This method finds the note by its ID and removes the given tag from it. If the note is found and the tag is successfully removed,
-        the note collection is updated and saved. If the note is not found, an error message is returned.
+        This method finds the note by its ID and removes the given tag from its tags list. The note collection is updated
+        and saved after removing the tag. If the note is not found, an error message is returned.
 
         Args:
             note_id (int): The ID of the note from which the tag will be removed.
             tag (str): The tag to remove from the note.
 
         Returns:
-            str: A message indicating the result of the operation. If the note is found and the tag is removed, a success message is returned.
-                If the note is not found, an error message is returned.
+            None: Prints a message indicating the result of the operation.
         """
         note = self.get_note_by_id(note_id)
-        if note:
-            if note.remove_tag(tag):
-                self.storage.save_data(self.notes)
-                if not self.is_note_tag_in_storage(note.id, tag):
-                    return f"Tag has not been removed form Note with id {note_id}."
-                return f"Tag has not been removed form Note with id {note_id} at the storage."
-        return f"Note with id {note_id} not found."
+        if not note:
+            print(f"Note with id {note_id} not found.")
+        
+        # Remove the tag if it exists
+        if tag in note.tags:
+            note.tags.remove(tag)
+            self.storage.save_data(self.notes)
+            
+            # Verify if the tag has been successfully removed from the storage
+            if not self.is_note_tag_in_storage(note_id, tag):
+                print(f"Tag '{tag}' has been removed from the Note with id {note.title}.")
+            else:
+                print(f"Tag '{tag}' has not been removed from the Note with id {note.title} in the storage.")
+        else:
+            print(f"Tag '{tag}' not found for the Note with id {note.title}.")
     
     def is_note_tag_in_storage(self, note_id: int, tag:str) -> bool:
         """Method check is tag in the data storage
