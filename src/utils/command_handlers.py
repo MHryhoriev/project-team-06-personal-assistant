@@ -387,3 +387,29 @@ def handler_edit_note(manager: note_manager) -> None:
 
     except Exception as ex:
         print(f"An error occurred while editing the note: {ex}")
+
+@error_handler
+def handle_delete_note(manager: note_manager) -> None:
+    """
+    Handles the removal of a note for the manager.
+
+    Prompts user to enter title of the note to be deleted.
+    It then attempts to remove the note from the manager. If note is successfully deleted,
+    a success message is printed. If note is note found, an error message to be displayed. 
+    
+    """
+    title = input("Enter the title of the note to delete: ").strip()
+    if not title:
+        print ("Title cannot be empty.")
+        return
+    
+    try:
+        result = manager.delete_note(title)
+        if result:
+            # Make sure the deleted note is moved from the file
+            manager.save_notes_to_file()
+            print(f"Note titled '{title}' has been successfully deleted.")
+        else:
+            print(f"Note title '{title}' not found.")
+    except Exception as ex:
+        print(f"An error occurred while deleting the note: {ex}")
