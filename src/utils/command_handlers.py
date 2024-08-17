@@ -1,5 +1,5 @@
 from managers import ContactManager, NoteManager
-from models import Contact
+from models import Contact, Note
 from utils.custom_decorators import error_handler
 from managers import note_manager
 from typing import Optional
@@ -16,7 +16,7 @@ def handle_add_contact(manager: ContactManager) -> None:
     Parameters:
         manager (ContactManager): An instance of ContactManager to manage contacts.
     """
-    name = _prompt_for_non_empty_name("Enter name: ")
+    name = _prompt_for_non_empty_input("name", "Enter contact name: ")
     if not name:
         return
       
@@ -82,7 +82,7 @@ def handle_edit_contact(manager: ContactManager) -> None:
         manager (ContactManager): An instance of ContactManager to manage contacts.
     """
     try:
-        name = _prompt_for_non_empty_name("Enter the name of the contact to edit: ")
+        name = _prompt_for_non_empty_input("name", "Enter the name of the contact to edit: ")
         if not name:
             return
 
@@ -245,7 +245,44 @@ def handle_upcoming_birthdays(manager: ContactManager) -> None:
         print("No upcoming birthdays within the specified period.")
 
 @error_handler
-def _prompt_for_non_empty_name(prompt: str) -> Optional[str]:
+def handle_add_note(manager: NoteManager) -> None:
+    """
+    Handles the addition of a new note to the note manager.
+
+    Prompts the user to enter details for the new note, such as title and content.
+    It performs validation to ensure that the title is unique, meets length requirements, 
+    and that the content is not empty. If validation passes, the note is added to the manager.
+
+    Parameters:
+        manager (NoteManager): An instance of NoteManager to manage notes.
+    """
+    
+    title = input("Enter note title (or press Enter to skip): ").strip()
+    contact = input("Enter contact name (or press Enter to skip): ").strip()
+    content = input("Enter note content (or press Enter to skip): ").strip()
+
+    # Create a temporary note for validation
+    temp_note = Note(
+        id=len(manager.get_all_notes()) + 1,
+        title=title,
+        contact=contact,
+        content=content
+    )
+
+    # Validate the note before adding it
+    if not manager.validate_note(temp_note):
+        print("Validation failed. Note was not added.")
+        return
+    
+    # Check for name uniqueness
+    if any(note.title.lower() == title.lower() for note in manager.get_all_notes()):
+        print(f"Error: A note with the title '{title}' already exists.")
+        return
+
+    manager.add_note(temp_note)
+
+@error_handler
+def _prompt_for_non_empty_input(field_name: str, prompt: str) -> Optional[str]:
     """
     Prompts the user to enter a name and checks if it is non-empty.
 
@@ -255,8 +292,8 @@ def _prompt_for_non_empty_name(prompt: str) -> Optional[str]:
     Returns:
         Optional[str]: The entered name if it is non-empty, otherwise None.
     """
-    name = input(prompt).strip()
-    if not name:
-        print("Name cannot be empty.")
+    value = input(prompt).strip()
+    if not value:
+        print(f"Error: {field_name.capitalize()} cannot be empty.")
         return None
-    return name
+    return value
