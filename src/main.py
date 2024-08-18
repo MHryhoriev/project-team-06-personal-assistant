@@ -15,8 +15,11 @@ def main():
     while True:
         try:
             user_input = session.prompt("Enter a command: ")
-            command, *args = parse_input(user_input)
-            handle_command(command, contact_manager, note_manager)
+            if user_input:
+                command, *args = parse_input(user_input)
+                handle_command(command, contact_manager, note_manager)
+            else:
+                print("No command entered. Please try again.")
         except KeyboardInterrupt:
             print("\nGood bye!")
             break
