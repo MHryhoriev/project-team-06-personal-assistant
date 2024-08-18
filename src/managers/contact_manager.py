@@ -186,7 +186,7 @@ class ContactManager:
         """
         return self.contacts
 
-    def get_upcoming_birthdays(self, n_day: int=7) -> List[str]:
+    def get_upcoming_birthdays(self, n_day: int=7) -> List[dict]:
         """
         Retrieves a list of upcoming birthdays within a specified number of days.
 
