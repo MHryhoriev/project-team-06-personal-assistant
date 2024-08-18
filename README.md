@@ -75,13 +75,13 @@ A personal assistant for managing a contact book and notes. The application allo
 To use any command, simply enter it in the command line interface followed by any required parameters.
 
 
-# Data Storage System
+## Data Storage System
 
-## Overview
+### Overview
 
 This system provides functionality for managing persistent data storage using JSON files. It includes mechanisms to save and load data, ensuring that information is preserved between application runs.
 
-## Functionality
+### Functionality
 
 1. **Data Storage**: 
    - The system saves data to a specified JSON file. This is done through the `Storage` class and its concrete implementations (`NoteStorage` and `ContactStorage`), which handle different types of data.
@@ -95,7 +95,7 @@ This system provides functionality for managing persistent data storage using JS
 4. **Saving Data**:
    - When changes are made to the data, these changes are saved back to the JSON file. The cache is updated to reflect the most recent changes.
 
-## How It Works
+### How It Works
 
 - **Initialization**: 
   - When a `Storage` object is initialized, it is provided with the path to the JSON file where data will be stored.
@@ -113,8 +113,8 @@ This setup ensures that data is persistently stored and efficiently managed, pro
 1. Clone the repository:
 
     ```bash
-    git clone <URL_OF_YOUR_REPOSITORY>
-    cd <NAME_OF_YOUR_PROJECT>
+    git clone https://github.com/MHryhoriev/project-team-06-personal-assistant.git
+    cd project-team-06-personal-assistant
     ```
 
 2. Install the dependencies:
@@ -123,9 +123,18 @@ This setup ensures that data is persistently stored and efficiently managed, pro
     pip install -r requirements.txt
     ```
 
-## Running the Application
+## Running the Application (from the virtual environment)
 
-Run the application with:
+On Windows, run the application with:
 
 ```bash
-python main.py
+py src/main.py
+```
+
+On macOS and Linux, run the application with:
+
+```bash
+python src/main.py
+```
+
+

@@ -1,0 +1,9 @@
+colorama==0.4.6
+fuzzywuzzy==0.18.0
+Levenshtein==0.25.1
+prettytable==3.11.0
+prompt-toolkit==3.0.47
+python-Levenshtein==0.25.1
+rapidfuzz==3.9.6
+wcwidth==0.2.13
+win32-setctime==1.1.0
