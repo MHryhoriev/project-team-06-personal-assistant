@@ -26,7 +26,6 @@ class Contact:
     address: str
     phone_number: str
     email: str
-    birthday: str
     birthday: Optional[str] = field(default=None)
 
     def __post_init__(self):
