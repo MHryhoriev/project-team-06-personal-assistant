@@ -1,6 +1,7 @@
 from launcher import initialize_managers, handle_command
 from utils import parse_input, completer
 from prompt_toolkit import PromptSession
+from colors import format_yellow, format_green, format_red
 
 def main():
     """
@@ -9,7 +10,7 @@ def main():
     """
     contact_manager, note_manager = initialize_managers()
 
-    print("Welcome to the Contact Manager!")
+    print(format_green("Welcome to the Contact Manager!"))
     session = PromptSession(completer=completer)
 
     while True:
@@ -19,9 +20,9 @@ def main():
                 command, *args = parse_input(user_input)
                 handle_command(command, contact_manager, note_manager)
             else:
-                print("No command entered. Please try again.")
+                print(format_red("No command entered. Please try again."))
         except KeyboardInterrupt:
-            print("\nGood bye!")
+            print(format_yellow("Good bye!"))
             break
 
 if __name__ == "__main__":

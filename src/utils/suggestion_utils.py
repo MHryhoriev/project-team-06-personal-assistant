@@ -1,6 +1,7 @@
 from fuzzywuzzy import process
 from prompt_toolkit.completion import WordCompleter
 from constants import COMMANDS
+from colors import format_purple, format_red
 
 # Initialize a WordCompleter instance for autocompletion of commands
 completer = WordCompleter(COMMANDS, ignore_case=True)
@@ -45,8 +46,8 @@ def suggest_command(user_input: str, similarity: int = 70) -> None:
     try:
         suggestion = get_closest_command(user_input, similarity)
         if suggestion:
-            print(f"Invalid command. Did you mean: {suggestion}?")
+            print(format_purple(f"Invalid command. Did you mean: {suggestion}?"))
         else:
-            print("Invalid command.")
+            print(format_red("Invalid command."))
     except Exception as ex:
-        print(f"An error occurred while suggesting a command: {ex}")
+        print(format_red(f"An error occurred while suggesting a command: {ex}"))

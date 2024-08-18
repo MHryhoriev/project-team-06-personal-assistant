@@ -1,9 +1,9 @@
 from managers import ContactManager, NoteManager
 from models import Contact, Note
 from utils.custom_decorators import error_handler
-from typing import Optional
 from prettytable import PrettyTable
-from typing import List, Dict, Any
+from typing import List, Dict, Any, Optional
+from colors import format_yellow, format_green, format_red
 
 @error_handler
 def handle_add_contact(manager: ContactManager) -> None:
@@ -22,7 +22,7 @@ def handle_add_contact(manager: ContactManager) -> None:
         return
 
     if manager.search_by_name(name):
-        print(f"Contact with the name '{name}' already exists.")
+        print(format_red(f"Contact with the name '{name}' already exists."))
         return
         
     address = input("Enter address (or press Enter to skip): ").strip()
@@ -60,14 +60,14 @@ def handle_search_contact(manager: ContactManager) -> None:
         try:
             results = search_method(query)
             if results:
-                print(f"Found {len(results)} contact(s):")
+                print(format_green(f"Found {len(results)} contact(s):"))
                 _print_contacts(results)
             else:
-                print("No contacts found.")
+                print(format_red("No contacts found."))
         except Exception as ex:
-            print(f"An error occurred during the search: {ex}")
+            print(format_red(f"An error occurred during the search: {ex}"))
     else:
-        print("Invalid search type. Please choose 'name', 'email', or 'phone'.")
+        print(format_red("Invalid search type. Please choose 'name', 'email', or 'phone'."))
 
 @error_handler
 def handle_edit_contact(manager: ContactManager) -> None:
@@ -93,7 +93,7 @@ def handle_edit_contact(manager: ContactManager) -> None:
 
         updated_contact_data = manager.search_by_name(name)
         if updated_contact_data is None:
-            print(f"Contact with the name {name} not found.")
+            print(format_red(f"Contact with the name {name} not found."))
             return
 
         if address:
@@ -108,7 +108,7 @@ def handle_edit_contact(manager: ContactManager) -> None:
         # Update the contact
         manager.edit_contact(name, updated_contact_data)
     except Exception as ex:
-        print(f"An error occurred while editing the contact: {ex}")
+        print(format_red(f"An error occurred while editing the contact: {ex}"))
 
 @error_handler
 def handle_remove_contact(manager: ContactManager) -> None:
@@ -124,14 +124,13 @@ def handle_remove_contact(manager: ContactManager) -> None:
     """
     name = input("Enter the name of the contact to remove: ").strip()
     if not name:
-        print("Name cannot be empty.")
+        print(format_red("Name cannot be empty."))
         return
         
-    result = manager.remove_contact(name)
-    print(result)
+    manager.remove_contact(name)
 
 @error_handler
-def handle_show_all_notes(note_manager: NoteManager) -> None:
+def handle_show_all_notes(manager: NoteManager) -> None:
     """
     Handles the display of all notes from a Note object.
 
@@ -142,11 +141,12 @@ def handle_show_all_notes(note_manager: NoteManager) -> None:
         None: Prints A formatted string displaying all notes or a message if no notes are available.
     """
     
-    all_notes = note_manager.get_all_notes()
+    all_notes = manager.get_all_notes()
     if not all_notes:
-        print("No notes available.")
+        print(format_red("No notes available."))
         return
     
+    print(format_green(f"\nFound {len(all_notes)} note(s):"))
     _print_notes(all_notes)
 
 @error_handler
@@ -165,17 +165,17 @@ def handle_add_tag(manager: NoteManager) -> None:
 
     # Validate tag input
     if not tag or not isinstance(tag, str):
-        print("Invalid tag. Please provide a valid tag string.")
+        print(format_red("Invalid tag. Please provide a valid tag string."))
         return
 
     if not title:
-        print("Note title cannot be empty.")
+        print(format_red("Note title cannot be empty."))
         return
 
     # Search for notes by title
     note_list = manager.search_by_title(title)
     if not note_list:
-        print("No notes found with the given title.")
+        print(format_red("No notes found with the given title."))
         return
 
     for note in note_list:
@@ -197,17 +197,17 @@ def handle_remove_tag(manager: NoteManager) -> None:
 
     # Validate inputs
     if not tag or not isinstance(tag, str):
-        print("Invalid tag. Please provide a valid tag string.")
+        print(format_red("Invalid tag. Please provide a valid tag string."))
         return
 
     if not note_name:
-        print("Note title cannot be empty.")
+        print(format_red("Note title cannot be empty."))
         return
 
     # Search for notes by title
     note_list = manager.search_by_title(note_name)
     if not note_list:
-        print("No notes found with the given title.")
+        print(format_red("No notes found with the given title."))
         return
 
     for note in note_list:
@@ -227,9 +227,10 @@ def handle_show_all_contacts(manager: ContactManager) -> None:
     contacts = manager.get_all_contacts() 
     
     if not contacts:
-        print("No contacts available.")
+        print(format_red("No contacts available."))
         return
     
+    print(format_green(f"\nFound {len(contacts)} contact(s):"))
     _print_contacts(contacts)
         
 @error_handler
@@ -248,16 +249,16 @@ def handle_upcoming_birthdays(manager: ContactManager) -> None:
             n_day_input = input("Enter the number of days to check for upcoming birthdays: ").strip()
             n_day = int(n_day_input)
             if n_day <= 0:
-                print("Number of days must be positive. Please try again.")
+                print(format_red("Number of days must be positive. Please try again."))
                 continue
             break
         except ValueError:
-            print("Invalid input. Please enter a valid number.")
+            print(format_red("Invalid input. Please enter a valid number."))
     
     upcoming_birthdays = manager.get_upcoming_birthdays(n_day)
 
     if not upcoming_birthdays:
-        print("No upcoming birthdays within the specified period.")
+        print(format_red("No upcoming birthdays within the specified period."))
         return
 
     _print_upcoming_birthdays(upcoming_birthdays)
@@ -289,12 +290,12 @@ def handle_add_note(manager: NoteManager) -> None:
 
     # Validate the note before adding it
     if not manager.validate_note(temp_note):
-        print("Validation failed. Note was not added.")
+        print(format_red("Validation failed. Note was not added."))
         return
     
     # Check for name uniqueness
     if any(note.title.lower() == title.lower() for note in manager.get_all_notes()):
-        print(f"Error: A note with the title '{title}' already exists.")
+        print(format_red(f"Error: A note with the title '{title}' already exists."))
         return
 
     manager.add_note(temp_note)
@@ -312,7 +313,7 @@ def _prompt_for_non_empty_input(field_name: str, prompt: str) -> Optional[str]:
     """
     value = input(prompt).strip()
     if not value:
-        print(f"Error: {field_name.capitalize()} cannot be empty.")
+        print(format_red(f"Error: {field_name.capitalize()} cannot be empty."))
         return None
     return value
 
@@ -343,14 +344,14 @@ def handle_search_notes(manager: NoteManager) -> None:
         try:
             results = search_method(query)
             if results:
-                print(f"Found {len(results)} note(s):")
+                print(format_red(f"Found {len(results)} note(s):"))
                 _print_notes(results)
             else:
-                print("No notes found.")
+                print(format_red("No notes found."))
         except Exception as ex: 
-            print(f"An error occured during the search: {ex}")
+            print(format_red(f"An error occured during the search: {ex}"))
     else:
-        print("Invalid search type. Please choose 'title' or 'tag'.")
+        print(format_red("Invalid search type. Please choose 'title' or 'tag'."))
 
 @error_handler
 def handle_edit_note(manager: NoteManager) -> None:
@@ -370,19 +371,19 @@ def handle_edit_note(manager: NoteManager) -> None:
         # Promprt for the note title and esures it is not empty
         title = input("Enter the title of the note to edit: ").strip()
         if not title:
-           print("Title cannot be empty.")
+           print(format_red("Title cannot be empty."))
            return
         
         # Fetch the list of notes matching the title
         notes_list = manager.search_by_title(title)
         if not notes_list:
-            print(f"No notes found with the title '{title}'.")
+            print(format_red(f"No notes found with the title '{title}'."))
             return
 
         # Assume that we want to edit the first matching note
         note_to_edit = notes_list[0]
         if not isinstance(note_to_edit, Note):
-            print("The retrieved object is not a Note instance.")
+            print(format_red("The retrieved object is not a Note instance."))
             return
         
         new_content = input("Enter new content (or press Enter to keep current): ").strip()
@@ -393,14 +394,14 @@ def handle_edit_note(manager: NoteManager) -> None:
 
         #validate note before editing
         if not manager.validate_note(note_to_edit):
-            print("Note validation failed. Please check details and try again.")
+            print(format_red("Note validation failed. Please check details and try again."))
             return
         
         #update note
         manager.edit_note(note_to_edit.id, note_to_edit)
 
     except Exception as ex:
-        print(f"An error occurred while editing the note: {ex}")
+        print(format_red(f"An error occurred while editing the note: {ex}"))
 
 @error_handler
 def handle_remove_note(manager: NoteManager) -> None:
@@ -414,7 +415,7 @@ def handle_remove_note(manager: NoteManager) -> None:
     """
     title = input("Enter the title of the note to remove: ").strip()
     if not title:
-        print ("Title cannot be empty.")
+        print(format_red("Title cannot be empty."))
         return
     
     manager.remove_note(title)
@@ -435,7 +436,7 @@ def handle_sort_notes_by_tags(manager: NoteManager) -> None:
     sort_order = input("Enter 'asc' for ascending or 'desc' for descending: ").strip().lower()
 
     if sort_order not in ['asc', 'desc']:
-        print("Invalid sort order. Please enter 'asc' or 'desc'.")
+        print(format_red("Invalid sort order. Please enter 'asc' or 'desc'."))
         return
 
     sorted_notes = manager.sort_by_tags(order=sort_order)
@@ -450,13 +451,19 @@ def _print_sorted_notes(sorted_notes: List[Any]) -> None:
         sorted_notes (List[Any]): List of notes sorted by tags.
     """
     table_sorted_notes = PrettyTable()
-    table_sorted_notes.field_names = ["Title", "Content", "Tags", "Updated"]
+    table_sorted_notes.field_names = [
+        format_yellow("Title"),
+        format_yellow("Content"),
+        format_yellow("Tags"),
+        format_yellow("Updated")
+    ]
+
 
     for note in sorted_notes:
         tags_str = ", ".join(note.tags)
         table_sorted_notes.add_row([note.title, note.content, tags_str, note.updated_at])
 
-    print("\nSorted notes by tags:")
+    print(format_green("\nSorted notes by tags:"))
     print(table_sorted_notes)
 
 def _print_upcoming_birthdays(upcoming_birthdays: List[Dict[str, str]]) -> None:
@@ -467,12 +474,15 @@ def _print_upcoming_birthdays(upcoming_birthdays: List[Dict[str, str]]) -> None:
         upcoming_birthdays (List[Dict[str, str]]): List of dictionaries containing birthday details.
     """
     table_birthdays = PrettyTable()
-    table_birthdays.field_names = ["Name", "Birthday"]
+    table_birthdays.field_names = [
+        format_yellow("Name"),
+        format_yellow("Birthday")
+    ]
 
     for birthday in upcoming_birthdays:
         table_birthdays.add_row([birthday['name'], birthday['congratulation_date']])
 
-    print("\nUpcoming birthdays:")
+    print(format_green("\nUpcoming birthdays:"))
     print(table_birthdays)
 
 def _print_contacts(contacts: List[Any]) -> None:
@@ -483,7 +493,13 @@ def _print_contacts(contacts: List[Any]) -> None:
         contacts (List[Any]): List of contact objects.
     """
     table_contacts = PrettyTable()
-    table_contacts.field_names = ["Name", "Address", "Phone Number", "Email", "Birthday"]
+    table_contacts.field_names = [
+        format_yellow("Name"),
+        format_yellow("Address"),
+        format_yellow("Phone Number"),
+        format_yellow("Email"),
+        format_yellow("Birthday")
+    ]
 
     for contact in contacts:
         table_contacts.add_row([contact.name, contact.address, contact.phone_number, contact.email, contact.birthday])
@@ -498,7 +514,15 @@ def _print_notes(notes: List[Any]) -> None:
         all_notes (List[Any]): List of all notes.
     """
     table_notes = PrettyTable()
-    table_notes.field_names = ["ID", "Title", "Contact", "Content", "Tags", "Created At", "Updated At"]
+    table_notes.field_names = [
+        format_yellow("ID"),
+        format_yellow("Title"),
+        format_yellow("Contact"),
+        format_yellow("Content"),
+        format_yellow("Tags"),
+        format_yellow("Created At"),
+        format_yellow("Updated At")
+    ]
 
     for note in notes:
         tags_str = ", ".join(note.tags)

@@ -18,6 +18,7 @@ import re
 from dataclasses import dataclass, field, asdict
 from typing import Optional
 from datetime import date, datetime
+from colors import format_red
 
 @dataclass
 class Contact:
@@ -159,7 +160,7 @@ class Contact:
         """
         pattern = r'^(?:\+380|0)[\d]{9,12}$'  # Example pattern for Ukrainian numbers
         if not re.match(pattern, phone_number):
-            raise ValueError(f"Invalid phone number: {phone_number}. Expected format: +380XXXXXXXXX or 0XXXXXXXXX")
+            raise ValueError(format_red(f"Invalid phone number: {phone_number}. Expected format: +380XXXXXXXXX or 0XXXXXXXXX"))
 
     def _validate_email(self, email: str) -> None:
         """
@@ -179,7 +180,7 @@ class Contact:
         
         pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'  # Updated pattern for email validation
         if not re.match(pattern, email):
-            raise ValueError(f"Invalid email address: {email}. Expected format: example@domain.com")
+            raise ValueError(format_red(f"Invalid email address: {email}. Expected format: example@domain.com"))
     
     def _validate_birthday(self, birthday: str) -> None:
         """
@@ -198,10 +199,10 @@ class Contact:
         try:
             birthday_date = datetime.strptime(birthday, '%d.%m.%Y').date()
         except ValueError:
-            raise ValueError(f"Invalid birthday format: {birthday}. Expected format: DD.MM.YYYY")
+            raise ValueError(format_red(f"Invalid birthday format: {birthday}. Expected format: DD.MM.YYYY"))
         
         if birthday_date > date.today():
-            raise ValueError("Birthday cannot be in the future.")
+            raise ValueError(format_red("Birthday cannot be in the future."))
 
     def to_dict(self) -> dict:
         """

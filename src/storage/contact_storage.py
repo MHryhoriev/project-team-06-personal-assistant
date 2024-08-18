@@ -1,5 +1,6 @@
 from models import Contact
 from storage import Storage
+from colors import format_red
 
 class ContactStorage(Storage[Contact]):
     """
@@ -23,7 +24,7 @@ class ContactStorage(Storage[Contact]):
         required_fields = {"name", "address", "phone_number", "email", "birthday"}
         missing_fields = required_fields - data.keys()
         if missing_fields:
-            print(f"Missing fields in contact data: {missing_fields}")
+            print(format_red(f"Missing fields in contact data: {missing_fields}"))
             return False
         return True
 
