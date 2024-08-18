@@ -23,7 +23,7 @@ from storage import ContactStorage
 from datetime import datetime, timedelta, date
 from typing import List
 from models import Contact
-
+from colors import format_red, format_green
 
 class ContactManager:
     def __init__(self, storage: ContactStorage) -> None:
@@ -52,14 +52,16 @@ class ContactManager:
         if self.contacts:
             for existing_contact in self.contacts:
                 if existing_contact.name == contact.name:
-                    print(f"Contact with the name '{contact.name}' already exists.")
+                    print(format_red(f"Contact with the name '{contact.name}' already exists."))
                     return
 
         self.contacts.append(contact)
         self.storage.save_data(self.contacts)
-        print(f"Contact '{contact.name}' successfully added.")
 
     def remove_contact(self, name: str) -> str:
+        print(format_green(f"Contact '{contact.name}' successfully added."))
+        
+    def remove_contact(self, name: str) -> None:
         """
         Removes a contact from the list by name.
 
@@ -79,8 +81,8 @@ class ContactManager:
         if contact_to_remove:
             self.contacts.remove(contact_to_remove)
             self.storage.save_data(self.contacts)
-            return f"Contact {name} successfully deleted."
-        return f"Contact {name} not found."
+            print(format_green(f"Contact {name} successfully deleted."))
+        print(format_red(f"Contact {name} not found."))
 
     def edit_contact(self, name: str, updated_contact: Contact) -> None:
         """
@@ -101,10 +103,10 @@ class ContactManager:
 
                 self.contacts[i] = updated_contact
                 self.storage.save_data(self.contacts)
-                print(f"Contact {name} updated successfully.")
+                print(format_green(f"Contact {name} updated successfully."))
                 return
-
-        print(f"Contact with the name {name} not found.")
+        
+        print(format_red(f"Contact with the name {name} not found."))
 
     def search_by_name(self, name: str) -> List[Contact]:
         """
@@ -122,8 +124,8 @@ class ContactManager:
         """
         try:
             if not name.strip():
-                raise ValueError("Search name cannot be empty.")
-
+                raise ValueError(format_red("Search name cannot be empty."))
+            
             pattern = re.compile(re.escape(name), re.IGNORECASE)
             matching_contacts = [
                 contact for contact in self.contacts if pattern.search(contact.name)
@@ -133,11 +135,11 @@ class ContactManager:
 
         except re.error as e:
             raise RuntimeError(
-                f"An error occurred while processing the search pattern: {e}"
+                format_red(f"An error occurred while processing the search pattern: {e}")
             )
-
+        
         except Exception as e:
-            raise RuntimeError(f"An unexpected error occurred during the search: {e}")
+            raise RuntimeError(format_red(f"An unexpected error occurred during the search: {e}"))
 
     def search_by_email(self, email: str) -> List[Contact]:
         """
