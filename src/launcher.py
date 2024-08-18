@@ -4,7 +4,7 @@ from constants import (
     CONTACT_DATA_FILE_PATH,
     NOTE_DATA_FILE_PATH,
     COMMAND,
-    COMMAND_DESCRIPTIONS,
+    COMMAND_DESCRIPTIONS
 )
 from prettytable import PrettyTable
 from utils import (
@@ -22,7 +22,7 @@ from utils import (
     handle_add_tag,
     handle_remove_tag,
     handle_sort_notes_by_tags,
-    suggest_command,
+    suggest_command
 )
 from colors import format_green, format_yellow
 
