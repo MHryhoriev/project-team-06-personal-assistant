@@ -17,7 +17,7 @@ updated_at (Date): Date and time the note was last updated.
 from datetime import datetime
 from dataclasses import dataclass, asdict, field
 from typing import List
-from models.contact import Contact  # Assume Contact class is defined in 'contact.py'
+from models.contact import Contact 
 
 
 @dataclass
@@ -32,11 +32,13 @@ class Note:
 
     def __repr__(self) -> str:
         return str(asdict(self))
-
-        # Temporary solution
-
+      
     def __str__(self) -> str:
-        return f"ID: {self.id}, Title: {self.title}, Contact: {self.contact}, Content: {self.content}, Created_at: {self.created_at}, Updated_at: {self.updated_at}, Tags: {self.tags}"
+        return (
+            f"ID: {self.id}, Title: {self.title}, Contact: {self.contact}, "
+            f"Content: {self.content}, Created_at: {self.created_at}, "
+            f"Updated_at: {self.updated_at}, Tags: {self.tags}"
+        )
 
     def update_content_and_tag(self, new_content: str, new_tags: List[str]) -> None:
         """

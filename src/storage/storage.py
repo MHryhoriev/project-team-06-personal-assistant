@@ -2,6 +2,7 @@ import os
 import json
 from typing import List, Optional, TypeVar, Generic
 from abc import ABC, abstractmethod
+from colors import format_red
 
 # Define a TypeVar for the generic type
 T = TypeVar("T")
@@ -41,7 +42,7 @@ class Storage(Generic[T], ABC):
             Prints error messages to the console in case of file access or JSON decoding issues.
         """
         if not os.path.exists(self.file_path):
-            print(f"File '{self.file_path}' does not exist.")
+            print(format_red(f"File '{self.file_path}' does not exist."))
             return []
 
         try:
@@ -49,17 +50,19 @@ class Storage(Generic[T], ABC):
                 try:
                     data = json.load(file)
                     if not isinstance(data, list):
-                        raise ValueError("Data in the file is not a valid list.")
+                        raise ValueError(
+                            format_red("Data in the file is not a valid list.")
+                        )
                     return [
-                        self.create_instance(item)
-                        for item in data
+                        self.create_instance(item) 
+                        for item in data 
                         if self.is_valid_data(item)
                     ]
                 except json.JSONDecodeError:
-                    print("Error decoding JSON data.")
+                    print(format_red("Error decoding JSON data."))
                     return []
         except (OSError, IOError) as ex:
-            print(f"Error reading file '{self.file_path}': {ex}")
+            print(format_red(f"Error reading file '{self.file_path}': {ex}"))
             return []
 
     def load_data(self) -> List[T]:
@@ -96,9 +99,9 @@ class Storage(Generic[T], ABC):
                         indent=4,
                     )
                 except (TypeError, ValueError) as ex:
-                    print(f"Error serializing data to JSON: {ex}")
+                    print(format_red(f"Error serializing data to JSON: {ex}"))
         except (OSError, IOError) as ex:
-            print(f"Error writing to file '{self.file_path}': {ex}")
+            print(format_red(f"Error writing to file '{self.file_path}': {ex}"))
 
     @abstractmethod
     def is_valid_data(self, data: dict) -> bool:

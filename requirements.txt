@@ -1,7 +1,6 @@
 colorama==0.4.6
 fuzzywuzzy==0.18.0
 Levenshtein==0.25.1
-loguru==0.7.2
 prettytable==3.11.0
 prompt-toolkit==3.0.47
 python-Levenshtein==0.25.1
