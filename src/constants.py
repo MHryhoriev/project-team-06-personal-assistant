@@ -42,7 +42,7 @@ COMMANDS = [
     COMMAND.CHECK_BIRTHDAYS,
     COMMAND.SORT_NOTES,
     COMMAND.EXIT,
-    COMMAND.HELP,
+    COMMAND.HELP
 ]
 
 # Command descriptions
@@ -62,7 +62,7 @@ COMMAND_DESCRIPTIONS = {
     COMMAND.CHECK_BIRTHDAYS: "Check upcoming birthdays",
     COMMAND.SORT_NOTES: "Sorting notes",
     COMMAND.EXIT: "Exit the application",
-    COMMAND.HELP: "Show available commands",
+    COMMAND.HELP: "Show available commands"
 }
 
 # File paths
