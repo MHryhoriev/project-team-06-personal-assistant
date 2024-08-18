@@ -3,8 +3,11 @@ from typing import Callable, Any
 from colors import format_red
 
 # Logging settings
-logging.basicConfig(level=logging.ERROR, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+logging.basicConfig(
+    level=logging.ERROR, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+)
 logger = logging.getLogger(__name__)
+
 
 def error_handler(func: Callable[..., Any]) -> Callable[..., Any]:
     """
@@ -17,6 +20,7 @@ def error_handler(func: Callable[..., Any]) -> Callable[..., Any]:
     Returns:
         Callable[..., Any]: The decorated function with error handling.
     """
+
     def wrapper(*args, **kwargs):
         try:
             return func(*args, **kwargs)
@@ -34,11 +38,15 @@ def error_handler(func: Callable[..., Any]) -> Callable[..., Any]:
             print(format_red(message))
         except NotImplementedError as nie:
             message = f"A NotImplementedError occurred: {nie}"
-            logger.error("NotImplementedError in function '%s': %s", func.__name__, message)
+            logger.error(
+                "NotImplementedError in function '%s': %s", func.__name__, message
+            )
             print(format_red(message))
         except Exception as un_err:
             message = f"An unexpected error occurred: {un_err}"
-            logger.error("Unexpected error in function '%s': %s", func.__name__, message)
+            logger.error(
+                "Unexpected error in function '%s': %s", func.__name__, message
+            )
             print(format_red(message))
-        
+
     return wrapper

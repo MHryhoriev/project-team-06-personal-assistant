@@ -3,6 +3,7 @@ from utils import parse_input, completer
 from prompt_toolkit import PromptSession
 from colors import format_yellow, format_green, format_red
 
+
 def main():
     """
     Main entry point for the Contact Manager console application.
@@ -24,6 +25,7 @@ def main():
         except KeyboardInterrupt:
             print(format_yellow("Good bye!"))
             break
+
 
 if __name__ == "__main__":
     main()

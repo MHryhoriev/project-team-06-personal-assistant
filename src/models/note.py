@@ -14,11 +14,11 @@ created_at (Date): The date and time the note was created.
 updated_at (Date): Date and time the note was last updated.
 """
 
-
 from datetime import datetime
 from dataclasses import dataclass, asdict, field
 from typing import List
 from models.contact import Contact 
+
 
 @dataclass
 class Note:
@@ -28,22 +28,25 @@ class Note:
     content: str = ""
     tags: List[str] = field(default_factory=list)
     created_at: datetime = field(default_factory=datetime.now)
-    updated_at:datetime = field(default_factory=datetime.now)
-    
+    updated_at: datetime = field(default_factory=datetime.now)
+
     def __repr__(self) -> str:
         return str(asdict(self))
-    
-    # Temporary solution
+      
     def __str__(self) -> str:
-        return f"ID: {self.id}, Title: {self.title}, Contact: {self.contact}, Content: {self.content}, Created_at: {self.created_at}, Updated_at: {self.updated_at}, Tags: {self.tags}"
+        return (
+            f"ID: {self.id}, Title: {self.title}, Contact: {self.contact}, "
+            f"Content: {self.content}, Created_at: {self.created_at}, "
+            f"Updated_at: {self.updated_at}, Tags: {self.tags}"
+        )
 
     def update_content_and_tag(self, new_content: str, new_tags: List[str]) -> None:
         """
         Updates the content and tags of the note and sets the updated_at timestamp to the current time.
 
-        This method modifies the note's content and tags based on the provided values. If `new_content` 
-        is provided, it updates the note's content with the new content. If `new_tags` is provided, it 
-        updates the note's tags with the new tags. After updating the content and tags, the method updates 
+        This method modifies the note's content and tags based on the provided values. If `new_content`
+        is provided, it updates the note's content with the new content. If `new_tags` is provided, it
+        updates the note's tags with the new tags. After updating the content and tags, the method updates
         the `updated_at` timestamp to the current date and time to reflect the modification.
 
         Args:
@@ -76,8 +79,16 @@ class Note:
                 - 'tags': A list of tags associated with the note (List[str]).
         """
         note_dict = asdict(self)
-    
-        note_dict["created_at"] = self.created_at.isoformat() if isinstance(self.created_at, datetime) else self.created_at
-        note_dict["updated_at"] = self.updated_at.isoformat() if isinstance(self.updated_at, datetime) else self.updated_at
+
+        note_dict["created_at"] = (
+            self.created_at.isoformat()
+            if isinstance(self.created_at, datetime)
+            else self.created_at
+        )
+        note_dict["updated_at"] = (
+            self.updated_at.isoformat()
+            if isinstance(self.updated_at, datetime)
+            else self.updated_at
+        )
 
         return note_dict

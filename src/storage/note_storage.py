@@ -2,6 +2,7 @@ from models import Note
 from storage import Storage
 from colors import format_red
 
+
 class NoteStorage(Storage[Note]):
     """
     The NoteStorage class is responsible for managing the persistent storage of note data
@@ -21,13 +22,20 @@ class NoteStorage(Storage[Note]):
         Side effects:
             Prints an error message to the console if any required fields are missing.
         """
-        required_fields = {"id", "title", "contact", "content", "created_at", "updated_at", "tags"}
+        required_fields = {
+            "id",
+            "title",
+            "contact",
+            "content",
+            "created_at",
+            "updated_at",
+            "tags",
+        }
         missing_fields = required_fields - data.keys()
         if missing_fields:
             print(format_red(f"Missing fields in note data: {missing_fields}"))
             return False
         return True
-
 
     def create_instance(self, data: dict) -> Note:
         """

@@ -54,9 +54,11 @@ class ContactManager:
                 if existing_contact.name == contact.name:
                     print(format_red(f"Contact with the name '{contact.name}' already exists."))
                     return
-        
+
         self.contacts.append(contact)
         self.storage.save_data(self.contacts)
+
+    def remove_contact(self, name: str) -> str:
         print(format_green(f"Contact '{contact.name}' successfully added."))
         
     def remove_contact(self, name: str) -> None:
@@ -73,7 +75,9 @@ class ContactManager:
         Returns:
             str: A message indicating the result of the removal operation.
         """
-        contact_to_remove = next((contact for contact in self.contacts if contact.name == name), None)
+        contact_to_remove = next(
+            (contact for contact in self.contacts if contact.name == name), None
+        )
         if contact_to_remove:
             self.contacts.remove(contact_to_remove)
             self.storage.save_data(self.contacts)
@@ -84,7 +88,7 @@ class ContactManager:
         """
         Updates the information of an existing contact.
 
-        This method searches for a contact by its name, validates the new phone number and email, 
+        This method searches for a contact by its name, validates the new phone number and email,
         and updates the contact's information if found. If the contact is not found, it prints an error message.
 
         Args:
@@ -96,7 +100,7 @@ class ContactManager:
                 # Validate the updated phone number and email
                 contact._validate_phone_number(updated_contact.phone_number)
                 contact._validate_email(updated_contact.email)
-                
+
                 self.contacts[i] = updated_contact
                 self.storage.save_data(self.contacts)
                 print(format_green(f"Contact {name} updated successfully."))
@@ -123,12 +127,16 @@ class ContactManager:
                 raise ValueError(format_red("Search name cannot be empty."))
             
             pattern = re.compile(re.escape(name), re.IGNORECASE)
-            matching_contacts = [contact for contact in self.contacts if pattern.search(contact.name)]
-            
-            return matching_contacts # A list of notes s that match the search query.
-        
+            matching_contacts = [
+                contact for contact in self.contacts if pattern.search(contact.name)
+            ]
+
+            return matching_contacts  # A list of notes s that match the search query.
+
         except re.error as e:
-            raise RuntimeError(format_red(f"An error occurred while processing the search pattern: {e}"))
+            raise RuntimeError(
+                format_red(f"An error occurred while processing the search pattern: {e}")
+            )
         
         except Exception as e:
             raise RuntimeError(format_red(f"An unexpected error occurred during the search: {e}"))
@@ -137,7 +145,7 @@ class ContactManager:
         """
         Searches for contacts by email address.
 
-        This method searches through the list of contacts and returns a list of contacts 
+        This method searches through the list of contacts and returns a list of contacts
         where the specified email address is found within the contact's email.
 
         Args:
@@ -147,11 +155,11 @@ class ContactManager:
             List[Contact]: A list of contacts that have the specified email address or a matching partial email.
         """
         matching_contacts = []
-        #search for contacts with matching email
+        # search for contacts with matching email
         for contact in self.contacts:
             if email in contact.email:
                 matching_contacts.append(contact)
-        # retrun the list of matching contacts        
+        # retrun the list of matching contacts
         return matching_contacts
 
     def search_by_phone_number(self, phone_number: str) -> List[Contact]:
@@ -174,7 +182,7 @@ class ContactManager:
                     matching_contacts.append(contact)
 
         return matching_contacts
-    
+
     def get_all_contacts(self) -> List[Contact]:
         """
         Retrieves all contacts from the contact list.
@@ -186,29 +194,44 @@ class ContactManager:
         """
         return self.contacts
 
-    def get_upcoming_birthdays(self, n_day: int=7) -> List[dict]:
+    def get_upcoming_birthdays(self, n_day: int = 7) -> List[dict]:
         """
         Retrieves a list of upcoming birthdays within a specified number of days.
 
-        This method checks the birthdays of all contacts and returns those that fall within 
-        the specified number of days from the current date. If a birthday has already occurred 
+        This method checks the birthdays of all contacts and returns those that fall within
+        the specified number of days from the current date. If a birthday has already occurred
         this year, it is considered for the next year.
 
         Args:
-            n_days (int): The number of days from today to check for upcoming birthdays. 
+            n_days (int): The number of days from today to check for upcoming birthdays.
                         Default is 7 days.
 
         Returns:
-            List[str]: A list of strings with each string containing the contact's name and 
+            List[str]: A list of strings with each string containing the contact's name and
                     their upcoming birthday date.
         """
         res = []
-        if self.contacts: 
+        if self.contacts:
             to_date = date.today()
-            for contact in self.contacts: # We go through the contacts and pike up birthdays, transferring the day to the desired format
-                birthday = datetime.strptime(contact.birthday, "%d.%m.%Y").replace(year=to_date.year).date()
-                if birthday < to_date: # Check if the date of birth has passed
-                    birthday = birthday.replace(year=to_date.year+1)
-                if to_date <= birthday <= (to_date + timedelta(days=n_day)): # Check if the date of birth falls within a given period of days
-                    res.append({"name": contact.name, "congratulation_date": birthday.strftime('%d.%m.%Y')})
+            for (
+                contact
+            ) in (
+                self.contacts
+            ):  # We go through the contacts and pike up birthdays, transferring the day to the desired format
+                birthday = (
+                    datetime.strptime(contact.birthday, "%d.%m.%Y")
+                    .replace(year=to_date.year)
+                    .date()
+                )
+                if birthday < to_date:  # Check if the date of birth has passed
+                    birthday = birthday.replace(year=to_date.year + 1)
+                if (
+                    to_date <= birthday <= (to_date + timedelta(days=n_day))
+                ):  # Check if the date of birth falls within a given period of days
+                    res.append(
+                        {
+                            "name": contact.name,
+                            "congratulation_date": birthday.strftime("%d.%m.%Y"),
+                        }
+                    )
         return res

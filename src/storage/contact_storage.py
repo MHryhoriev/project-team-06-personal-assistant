@@ -2,6 +2,7 @@ from models import Contact
 from storage import Storage
 from colors import format_red
 
+
 class ContactStorage(Storage[Contact]):
     """
     The ContactStorage class is responsible for managing the persistent storage of contact data
@@ -27,7 +28,6 @@ class ContactStorage(Storage[Contact]):
             print(format_red(f"Missing fields in contact data: {missing_fields}"))
             return False
         return True
-
 
     def create_instance(self, data: dict) -> Contact:
         """
