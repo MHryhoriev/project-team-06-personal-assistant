@@ -17,7 +17,9 @@ from utils import (
     handle_add_tag,
     handle_remove_tag,
     handle_sort_notes_by_tags,
-    suggest_command
+    suggest_command,
+    format_green,
+    format_yellow
 )
 
 def initialize_managers() -> tuple[ContactManager, NoteManager]:
@@ -79,17 +81,17 @@ def show_help(available_commands: dict) -> None:
         available_commands (dict): A dictionary of available commands and descriptions.
     """
     table = PrettyTable()
-    table.field_names = ["Command", "Description"]
+    table.field_names = [format_yellow("Command"), format_yellow("Description")]
 
     for cmd, description in available_commands.items():
-        table.add_row([cmd, description])
+        table.add_row([format_green(cmd), description])
     
-    print("\nAvailable commands:")
+    print(format_green("\nAvailable commands:"))
     print(table)
     print()
 
 def exit_program() -> None:
     """Handles program exit."""
-    print("Good bye!")
+    print(format_yellow("Good bye!"))
     import sys
     sys.exit()
