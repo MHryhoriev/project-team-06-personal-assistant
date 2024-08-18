@@ -4,6 +4,7 @@ This module contains constants used throughout the application.
 
 from pathlib import Path
 
+
 # Individual command constants
 class COMMAND:
     ADD_CONTACT = "add_contact"
@@ -41,7 +42,7 @@ COMMANDS = [
     COMMAND.CHECK_BIRTHDAYS,
     COMMAND.SORT_NOTES,
     COMMAND.EXIT,
-    COMMAND.HELP
+    COMMAND.HELP,
 ]
 
 # Command descriptions
@@ -61,10 +62,10 @@ COMMAND_DESCRIPTIONS = {
     COMMAND.CHECK_BIRTHDAYS: "Check upcoming birthdays",
     COMMAND.SORT_NOTES: "Sorting notes",
     COMMAND.EXIT: "Exit the application",
-    COMMAND.HELP: "Show available commands"
+    COMMAND.HELP: "Show available commands",
 }
 
 # File paths
 BASE_DIR = Path(__file__).resolve().parent.parent
-CONTACT_DATA_FILE_PATH = BASE_DIR.joinpath('data', 'contacts_data.json')
-NOTE_DATA_FILE_PATH = BASE_DIR.joinpath('data', 'note_data.json')
+CONTACT_DATA_FILE_PATH = BASE_DIR.joinpath("data", "contacts_data.json")
+NOTE_DATA_FILE_PATH = BASE_DIR.joinpath("data", "note_data.json")

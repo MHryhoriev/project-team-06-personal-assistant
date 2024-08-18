@@ -2,6 +2,7 @@ from launcher import initialize_managers, handle_command
 from utils import parse_input, completer
 from prompt_toolkit import PromptSession
 
+
 def main():
     """
     Main entry point for the Contact Manager console application.
@@ -23,6 +24,7 @@ def main():
         except KeyboardInterrupt:
             print("\nGood bye!")
             break
+
 
 if __name__ == "__main__":
     main()

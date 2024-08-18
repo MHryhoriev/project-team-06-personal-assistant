@@ -5,6 +5,7 @@ from constants import COMMANDS
 # Initialize a WordCompleter instance for autocompletion of commands
 completer = WordCompleter(COMMANDS, ignore_case=True)
 
+
 def get_closest_command(user_input: str, similarity: int) -> str:
     """
     Finds the closest matching command from the list of valid commands.
@@ -21,21 +22,22 @@ def get_closest_command(user_input: str, similarity: int) -> str:
         return suggestion
     return None
 
+
 def suggest_command(user_input: str, similarity: int = 70) -> None:
     """
     Suggests the closest matching command based on user input using fuzzy string matching.
 
     This function takes the user's input command and compares it against a predefined list of valid commands.
-    If the similarity score between the user's input and a valid command exceeds the threshold, 
+    If the similarity score between the user's input and a valid command exceeds the threshold,
     the function suggests the closest matching command.
 
     Args:
         user_input (str): The command entered by the user.
-        similarity (int, optional): The minimum similarity score (as a percentage) required to suggest 
+        similarity (int, optional): The minimum similarity score (as a percentage) required to suggest
                                     a command. Default is 70%.
 
     Returns:
-        None. This function prints a suggestion if a close match is found, or a message indicating 
+        None. This function prints a suggestion if a close match is found, or a message indicating
         that no close match was found.
 
     Example:

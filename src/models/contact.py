@@ -19,6 +19,7 @@ from dataclasses import dataclass, field, asdict
 from typing import Optional
 from datetime import date, datetime
 
+
 @dataclass
 class Contact:
     name: str
@@ -157,15 +158,17 @@ class Contact:
         Raises:
             ValueError: If the phone number does not conform to the expected format.
         """
-        pattern = r'^(?:\+380|0)[\d]{9,12}$'  # Example pattern for Ukrainian numbers
+        pattern = r"^(?:\+380|0)[\d]{9,12}$"  # Example pattern for Ukrainian numbers
         if not re.match(pattern, phone_number):
-            raise ValueError(f"Invalid phone number: {phone_number}. Expected format: +380XXXXXXXXX or 0XXXXXXXXX")
+            raise ValueError(
+                f"Invalid phone number: {phone_number}. Expected format: +380XXXXXXXXX or 0XXXXXXXXX"
+            )
 
     def _validate_email(self, email: str) -> None:
         """
         Validates the format of an email address.
 
-        This method checks if the provided email address adheres to a standard email format. 
+        This method checks if the provided email address adheres to a standard email format.
         It raises a `ValueError` if the email is empty or does not match the expected format.
 
         Args:
@@ -176,17 +179,19 @@ class Contact:
         """
         if not email:
             raise ValueError("Email address cannot be empty.")
-        
-        pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'  # Updated pattern for email validation
+
+        pattern = r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"  # Updated pattern for email validation
         if not re.match(pattern, email):
-            raise ValueError(f"Invalid email address: {email}. Expected format: example@domain.com")
-    
+            raise ValueError(
+                f"Invalid email address: {email}. Expected format: example@domain.com"
+            )
+
     def _validate_birthday(self, birthday: str) -> None:
         """
         Validates the birthday field.
 
         This method checks if the provided birthday string is in the correct format (DD.MM.YYYY),
-        converts it to a `date` object, and ensures that the birthday is not in the future. If any 
+        converts it to a `date` object, and ensures that the birthday is not in the future. If any
         of these conditions fail, a `ValueError` is raised.
 
         Args:
@@ -196,10 +201,12 @@ class Contact:
             ValueError: If the birthday is not a valid date or if it is in the future.
         """
         try:
-            birthday_date = datetime.strptime(birthday, '%d.%m.%Y').date()
+            birthday_date = datetime.strptime(birthday, "%d.%m.%Y").date()
         except ValueError:
-            raise ValueError(f"Invalid birthday format: {birthday}. Expected format: DD.MM.YYYY")
-        
+            raise ValueError(
+                f"Invalid birthday format: {birthday}. Expected format: DD.MM.YYYY"
+            )
+
         if birthday_date > date.today():
             raise ValueError("Birthday cannot be in the future.")
 
@@ -211,6 +218,6 @@ class Contact:
             dict: A dictionary representation of the Contact object.
         """
         return asdict(self)
-    
+
     def __str__(self) -> str:
         return f"Name: {self.__name}, Address: {self.__address}, Phone: {self.__phone_number}, Email: {self.__email}, Birthday: {self.__birthday}"
