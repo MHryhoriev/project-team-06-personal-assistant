@@ -1,11 +1,9 @@
 from managers import ContactManager, NoteManager
 from models import Contact, Note
 from utils.custom_decorators import error_handler
-from typing import Optional
 from prettytable import PrettyTable
-from typing import List, Dict, Any
-from colorama import Fore, Style, init
-from .colors import format_yellow, format_green, format_red
+from typing import List, Dict, Any, Optional
+from colors import format_yellow, format_green, format_red
 
 @error_handler
 def handle_add_contact(manager: ContactManager) -> None:
@@ -129,11 +127,10 @@ def handle_remove_contact(manager: ContactManager) -> None:
         print(format_red("Name cannot be empty."))
         return
         
-    result = manager.remove_contact(name)
-    print(result)
+    manager.remove_contact(name)
 
 @error_handler
-def handle_show_all_notes(note_manager: NoteManager) -> None:
+def handle_show_all_notes(manager: NoteManager) -> None:
     """
     Handles the display of all notes from a Note object.
 
@@ -144,11 +141,12 @@ def handle_show_all_notes(note_manager: NoteManager) -> None:
         None: Prints A formatted string displaying all notes or a message if no notes are available.
     """
     
-    all_notes = note_manager.get_all_notes()
+    all_notes = manager.get_all_notes()
     if not all_notes:
         print(format_red("No notes available."))
         return
     
+    print(format_green(f"\nFound {len(all_notes)} note(s):"))
     _print_notes(all_notes)
 
 @error_handler
@@ -232,6 +230,7 @@ def handle_show_all_contacts(manager: ContactManager) -> None:
         print(format_red("No contacts available."))
         return
     
+    print(format_green(f"\nFound {len(contacts)} contact(s):"))
     _print_contacts(contacts)
         
 @error_handler

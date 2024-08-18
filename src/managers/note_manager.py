@@ -6,6 +6,7 @@ import re
 from typing import List
 from models import Note
 from storage import NoteStorage
+from colors import format_red, format_green
 
 class NoteManager:
     def __init__(self, storage: NoteStorage) -> None:
@@ -51,13 +52,13 @@ class NoteManager:
         }
 
         if len(note.title or '') < min_title_length:
-            print(f"Error: {errors['title']}")
+            print(format_red(f"Error: {errors['title']}"))
             return False
         if not note.content:
-            print(f"Error: {errors['content']}")
+            print(format_red(f"Error: {errors['content']}"))
             return False
         if not note.contact:
-            print(f"Error: {errors['contact']}")
+            print(format_red(f"Error: {errors['contact']}"))
             return False
 
         return True
@@ -75,12 +76,12 @@ class NoteManager:
         """
         for existing_note in self.notes:
             if existing_note.title.lower() == note.title.lower():
-                print(f"Error: A note with the same '{note.title}' already exists")
+                print(format_red(f"Error: A note with the same '{note.title}' already exists"))
                 return
             
         self.notes.append(note)
         self.storage.save_data(self.notes)
-        print(f"Success: Note titled '{note.title}' successfully added.")
+        print(format_green(f"Success: Note titled '{note.title}' successfully added."))
 
     def search_by_title(self, query: str) -> List[Note]:
         """
@@ -103,7 +104,7 @@ class NoteManager:
         """
         try:
             if not query.strip():
-                raise ValueError("Search name cannot be empty.")
+                raise ValueError(format_red("Search name cannot be empty."))
 
             pattern = re.compile(re.escape(query), re.IGNORECASE)
             matching_notes = [note for note in self.notes if pattern.search(note.title)]
@@ -111,9 +112,9 @@ class NoteManager:
             return matching_notes 
                 
         except re.error as e:
-                raise RuntimeError(f"An error occurred while processing the search pattern: {e}")
+                raise RuntimeError(format_red(f"An error occurred while processing the search pattern: {e}"))
         except Exception as e:
-                raise RuntimeError(f"An unexpected error occurred during the search: {e}")
+                raise RuntimeError(format_red(f"An unexpected error occurred during the search: {e}"))
 
 
     def edit_note(self, note_id: int, updated_note: Note) -> None:
@@ -136,9 +137,9 @@ class NoteManager:
         if note:
             note.update_content_and_tag(updated_note.content, updated_note.tags)
             self.storage.save_data(self.notes)
-            print(f"Note '{note.title}' updated successfully.")
+            print(format_green(f"Note '{note.title}' updated successfully."))
         else:
-            print(f"Note with id {note_id} not found.")
+            print(format_red(f"Note with id {note_id} not found."))
 
     def remove_note(self, title: str) -> None:
         """
@@ -159,9 +160,9 @@ class NoteManager:
         if note_to_remove:
             self.notes.remove(note_to_remove)
             self.storage.save_data(self.notes)
-            print(f"Note '{title}' successfully deleted.")
+            print(format_green(f"Note '{title}' successfully deleted."))
         else:
-            print(f"Note '{title}' not found.")
+            print(format_red(f"Note '{title}' not found."))
 
     def search_by_tag(self, tag: str) -> List[Note]:
         """
@@ -179,7 +180,7 @@ class NoteManager:
         """
 
         if not tag.strip():
-            raise ValueError("Tag cannot be empty or whitespace.")
+            raise ValueError(format_red("Tag cannot be empty or whitespace."))
 
         return [note for note in self.notes if tag in note.tags]
 
@@ -202,7 +203,7 @@ class NoteManager:
             ValueError: If `order` is not 'asc' or 'desc'.
         """
         if order not in ('asc', 'desc'):
-            raise ValueError("Order must be 'asc' or 'desc'")
+            raise ValueError(format_red("Order must be 'asc' or 'desc'"))
         
         if order == 'asc':
             sorted_notes = sorted(
@@ -246,7 +247,7 @@ class NoteManager:
         # Find the note by its ID
         note = self.get_note_by_id(note_id)
         if not note:
-            print(f"Note with id {note_id} not found.")
+            print(format_red(f"Note with id {note_id} not found."))
         
         # Add the tag to the note's tags list if it's not already present
         if tag and tag not in note.tags:
@@ -255,13 +256,13 @@ class NoteManager:
             
             # Verify if the tag has been successfully added to the storage
             if self.is_note_tag_in_storage(note_id, tag):
-                print(f"Tag '{tag}' has been added to the Note with id {note.title}.")
+                print(format_green(f"Tag '{tag}' has been added to the Note with id {note.title}."))
             else:
-                print(f"Tag '{tag}' has not been added to the Note with id {note.title} in the storage.")
+                print(format_red(f"Tag '{tag}' has not been added to the Note with id {note.title} in the storage."))
         elif tag in note.tags:
-            print(f"Tag '{tag}' already exists for the Note with id {note.title}.")
+            print(format_red(f"Tag '{tag}' already exists for the Note with id {note.title}."))
         else:
-            print("Invalid tag. Please provide a valid tag string.")
+            print(format_red("Invalid tag. Please provide a valid tag string."))
     
     def remove_tag(self, note_id: int, tag: str) -> None:
         """
@@ -279,7 +280,7 @@ class NoteManager:
         """
         note = self.get_note_by_id(note_id)
         if not note:
-            print(f"Note with id {note_id} not found.")
+            print(format_red(f"Note with id {note_id} not found."))
         
         # Remove the tag if it exists
         if tag in note.tags:
@@ -288,11 +289,11 @@ class NoteManager:
             
             # Verify if the tag has been successfully removed from the storage
             if not self.is_note_tag_in_storage(note_id, tag):
-                print(f"Tag '{tag}' has been removed from the Note with id {note.title}.")
+                print(format_green(f"Tag '{tag}' has been removed from the Note with id {note.title}."))
             else:
-                print(f"Tag '{tag}' has not been removed from the Note with id {note.title} in the storage.")
+                print(format_red(f"Tag '{tag}' has not been removed from the Note with id {note.title} in the storage."))
         else:
-            print(f"Tag '{tag}' not found for the Note with id {note.title}.")
+            print(format_red(f"Tag '{tag}' not found for the Note with id {note.title}."))
     
     def is_note_tag_in_storage(self, note_id: int, tag:str) -> bool:
         """Method check is tag in the data storage

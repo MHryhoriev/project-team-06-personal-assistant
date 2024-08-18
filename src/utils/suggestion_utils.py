@@ -1,7 +1,7 @@
 from fuzzywuzzy import process
 from prompt_toolkit.completion import WordCompleter
 from constants import COMMANDS
-from .colors import format_purple, format_red
+from colors import format_purple, format_red
 
 # Initialize a WordCompleter instance for autocompletion of commands
 completer = WordCompleter(COMMANDS, ignore_case=True)

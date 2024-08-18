@@ -17,9 +17,3 @@ from .command_handlers import (
 )
 from .custom_decorators import error_handler
 from .suggestion_utils import suggest_command, completer
-from .colors import (
-    format_green,
-    format_purple,
-    format_red,
-    format_yellow
-)

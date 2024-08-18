@@ -1,6 +1,7 @@
 from launcher import initialize_managers, handle_command
-from utils import parse_input, completer, format_yellow, format_green
+from utils import parse_input, completer
 from prompt_toolkit import PromptSession
+from colors import format_yellow, format_green, format_red
 
 def main():
     """
@@ -15,8 +16,11 @@ def main():
     while True:
         try:
             user_input = session.prompt("Enter a command: ")
-            command, *args = parse_input(user_input)
-            handle_command(command, contact_manager, note_manager)
+            if user_input:
+                command, *args = parse_input(user_input)
+                handle_command(command, contact_manager, note_manager)
+            else:
+                print(format_red("No command entered. Please try again."))
         except KeyboardInterrupt:
             print(format_yellow("Good bye!"))
             break

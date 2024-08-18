@@ -17,10 +17,9 @@ from utils import (
     handle_add_tag,
     handle_remove_tag,
     handle_sort_notes_by_tags,
-    suggest_command,
-    format_green,
-    format_yellow
+    suggest_command
 )
+from colors import format_green, format_yellow
 
 def initialize_managers() -> tuple[ContactManager, NoteManager]:
     """

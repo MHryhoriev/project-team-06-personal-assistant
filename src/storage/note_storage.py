@@ -1,5 +1,6 @@
 from models import Note
 from storage import Storage
+from colors import format_red
 
 class NoteStorage(Storage[Note]):
     """
@@ -23,7 +24,7 @@ class NoteStorage(Storage[Note]):
         required_fields = {"id", "title", "contact", "content", "created_at", "updated_at", "tags"}
         missing_fields = required_fields - data.keys()
         if missing_fields:
-            print(f"Missing fields in note data: {missing_fields}")
+            print(format_red(f"Missing fields in note data: {missing_fields}"))
             return False
         return True
 

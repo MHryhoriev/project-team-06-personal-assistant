@@ -1,6 +1,6 @@
 import logging
 from typing import Callable, Any
-from .colors import format_red
+from colors import format_red
 
 # Logging settings
 logging.basicConfig(level=logging.ERROR, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
