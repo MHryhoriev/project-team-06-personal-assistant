@@ -20,7 +20,6 @@ from typing import Optional
 from datetime import date, datetime
 from colors import format_red
 
-
 @dataclass
 class Contact:
     name: str
@@ -102,6 +101,14 @@ class Contact:
         self._validate_phone_number(value)
         self.__phone_number = value
 
+        # try:
+        #     self._validate_phone_number(value)
+        #     self.__phone_number = value
+        # except ValueError as ex:
+        #     ex.handled = True
+        #     print(ex)
+        #     raise
+
     @property
     def email(self) -> str:
         """
@@ -159,9 +166,14 @@ class Contact:
         Raises:
             ValueError: If the phone number does not conform to the expected format.
         """
+        from utils.exceptions import ValidationError
+
+        if not phone_number:
+            raise ValidationError(format_red("Phone number cannot be empty."))
+
         pattern = r"^(?:\+380|0)[\d]{9,12}$"  # Example pattern for Ukrainian numbers
         if not re.match(pattern, phone_number):
-            raise ValueError(
+            raise ValidationError(
                 format_red(f"Invalid phone number: {phone_number}. Expected format: +380XXXXXXXXX or 0XXXXXXXXX")
             )
 
@@ -178,12 +190,14 @@ class Contact:
         Raises:
             ValueError: If the email address is empty or does not conform to the expected email format.
         """
+        from utils.exceptions import ValidationError
+
         if not email:
-            raise ValueError("Email address cannot be empty.")
+            raise ValidationError(format_red("Email address cannot be empty."))
 
         pattern = r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"  # Updated pattern for email validation
         if not re.match(pattern, email):
-            raise ValueError(
+            raise ValidationError(
                 format_red(f"Invalid email address: {email}. Expected format: example@domain.com")
             )
     

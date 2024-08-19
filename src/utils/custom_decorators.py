@@ -1,6 +1,7 @@
 import logging
 from typing import Callable, Any
 from colors import format_red
+from utils.exceptions import ValidationError
 
 # Logging settings
 logging.basicConfig(
@@ -24,6 +25,9 @@ def error_handler(func: Callable[..., Any]) -> Callable[..., Any]:
     def wrapper(*args, **kwargs):
         try:
             return func(*args, **kwargs)
+        except ValidationError as ex:
+            logger.error("ValidationError in function '%s': %s", func.__name__, message)
+            print(ex)
         except ValueError:
             message = "A ValueError occurred. Please provide the required input."
             logger.error("ValueError in function '%s': %s", func.__name__, message)
