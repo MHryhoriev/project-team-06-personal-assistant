@@ -3,7 +3,6 @@ import json
 from typing import List, Optional, TypeVar, Generic
 from abc import ABC, abstractmethod
 from colors import format_red, format_yellow
-from constants import CONTACT_DATA_FILE_PATH
 
 # Define a TypeVar for the generic type
 T = TypeVar("T")
@@ -29,18 +28,6 @@ class Storage(Generic[T], ABC):
         """
         self.file_path = file_path
         self.__data_cache: Optional[List[T]] = None
-
-    def __ensure_directory_exists(file_path: str) -> None:
-        """
-        Ensures that the directory for the given file path exists.
-        If it does not exist, the directory is created.
-
-        Args:
-            file_path (str): The path to the file whose directory should be checked or created.
-        """
-        directory = os.path.dirname(file_path)
-        if not os.path.exists(directory):
-            os.makedirs(directory)
 
     def __load_from_file(self) -> List[T]:
         """
@@ -88,6 +75,21 @@ class Storage(Generic[T], ABC):
         if self.__data_cache is None:
             self.__data_cache = self.__load_from_file()
         return self.__data_cache
+    
+    def __ensure_directory_exists(file_path: str) -> None:
+        """
+        Ensures that the directory for the given file path exists.
+        If it does not exist, the directory is created.
+
+        Args:
+            file_path (str): The path to the file whose directory should be checked or created.
+        """
+        directory = os.path.dirname(file_path)
+        if not os.path.exists(directory):
+            os.makedirs(directory)
+            print(format_yellow(f"Directory created: {directory}"))
+        else:
+            print(format_red(f"Directory already exists: {directory}"))
 
     def save_data(self, data: List[T]) -> None:
         """
@@ -100,6 +102,8 @@ class Storage(Generic[T], ABC):
             Writes the data to the file in JSON format, printing error messages to the console
             in case of file access or JSON serialization issues.
         """
+
+        self.__ensure_directory_exists(self.file_path)
 
         directory = os.path.dirname(self.file_path)
         print(f"Ensuring directory exists for: {directory}")
