@@ -18,7 +18,7 @@ def handle_add_contact(manager: ContactManager) -> None:
     Parameters:
         manager (ContactManager): An instance of ContactManager to manage contacts.
     """
-    name = _prompt_for_non_empty_input("name", "Enter contact name: ")
+    name = _prompt_for_non_empty_input("name", "Enter contact name (required): ")
     if not name:
         return
 
@@ -27,8 +27,8 @@ def handle_add_contact(manager: ContactManager) -> None:
         return
 
     address = input("Enter address (or press Enter to skip): ").strip()
-    phone_number = input("Enter phone number (or press Enter to skip): ").strip()
-    email = input("Enter email (or press Enter to skip): ").strip()
+    phone_number = input("Enter phone number (required): ").strip()
+    email = input("Enter email (required): ").strip()
     birthday = input("Enter birthday (DD.MM.YYYY) (or press Enter to skip): ").strip()
 
     new_contact = Contact(

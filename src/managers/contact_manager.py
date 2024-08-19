@@ -58,7 +58,6 @@ class ContactManager:
         self.contacts.append(contact)
         self.storage.save_data(self.contacts)
 
-    def remove_contact(self, name: str) -> str:
         print(format_green(f"Contact '{contact.name}' successfully added."))
         
     def remove_contact(self, name: str) -> None:
