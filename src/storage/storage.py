@@ -102,18 +102,10 @@ class Storage(Generic[T], ABC):
             Writes the data to the file in JSON format, printing error messages to the console
             in case of file access or JSON serialization issues.
         """
+        self.__data_cache = data
 
         self.__ensure_directory_exists(self.file_path)
 
-        directory = os.path.dirname(self.file_path)
-        print(f"Ensuring directory exists for: {directory}")
-        if not os.path.exists(directory):
-            os.makedirs(directory)
-            print(f"Directory created: {directory}")
-        else:
-            print(f"Directory already exists: {directory}")
-
-        self.__data_cache = data
         try:
             with open(self.file_path, "w", encoding="utf-8") as file:
                 try:
