@@ -2,11 +2,10 @@ import os
 import json
 from typing import List, Optional, TypeVar, Generic
 from abc import ABC, abstractmethod
-from colors import format_red
+from colors import format_red, format_yellow
 
 # Define a TypeVar for the generic type
 T = TypeVar("T")
-
 
 class Storage(Generic[T], ABC):
     """
@@ -42,7 +41,7 @@ class Storage(Generic[T], ABC):
             Prints error messages to the console in case of file access or JSON decoding issues.
         """
         if not os.path.exists(self.file_path):
-            print(format_red(f"File '{self.file_path}' does not exist."))
+            print(format_yellow(f"Warning - File '{self.file_path}' does not exist."))
             return []
 
         try:
