@@ -300,7 +300,7 @@ def handle_add_note(manager: NoteManager) -> None:
         manager (NoteManager): An instance of NoteManager to manage notes.
     """
 
-    title = input("Enter note title: ").strip()
+    title = input("Enter note title (required): ").strip()
     contact = input("Enter contact name: ").strip()
     content = input("Enter note content: ").strip()
 
