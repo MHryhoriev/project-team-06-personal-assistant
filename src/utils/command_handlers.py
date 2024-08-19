@@ -97,31 +97,39 @@ def handle_edit_contact(manager: ContactManager) -> None:
         if not name:
             return
 
-        address = input("Enter new address (or press Enter to keep current): ").strip()
-        phone_number = input(
+        contacts = manager.search_by_name(name)
+        if not contacts:
+            print(format_red(f"Contact with the name '{name}' not found."))
+            return
+
+        # Assume we edit the first matching contact for simplicity
+        contact_to_edit = contacts[0]
+
+        new_address = input(
+            "Enter new address (or press Enter to keep current): "
+        ).strip()
+        new_phone_number = input(
             "Enter new phone number (or press Enter to keep current): "
         ).strip()
-        email = input("Enter new email (or press Enter to keep current): ").strip()
-        birthday = input(
+        new_email = input(
+            "Enter new email (or press Enter to keep current): "
+        ).strip()
+        new_birthday = input(
             "Enter new birthday (DD.MM.YYYY) (or press Enter to keep current): "
         ).strip()
 
-        updated_contact_data = manager.search_by_name(name)
-        if updated_contact_data is None:
-            print(format_red(f"Contact with the name {name} not found."))
-            return
-
-        if address:
-            updated_contact_data["address"] = address
-        if phone_number:
-            updated_contact_data["phone_number"] = phone_number
-        if email:
-            updated_contact_data["email"] = email
-        if birthday:
-            updated_contact_data["birthday"] = birthday
+        if new_address:
+            contact_to_edit.address = new_address
+        if new_phone_number:
+            contact_to_edit.phone_number = new_phone_number
+        if new_email:
+            contact_to_edit.email = new_email
+        if new_birthday:
+            contact_to_edit.birthday = new_birthday
 
         # Update the contact
-        manager.edit_contact(name, updated_contact_data)
+        manager.edit_contact(name, contact_to_edit)
+
     except Exception as ex:
         print(format_red(f"An error occurred while editing the contact: {ex}"))
 
@@ -211,12 +219,6 @@ def handle_remove_tag(manager: NoteManager) -> None:
         None: Prints messages indicating the result of the operation.
     """
     note_name = input("Please, enter the Note title for removing: ").strip().lower()
-    tag = input("Please, enter the tag name for removing: ").strip()
-
-    # Validate inputs
-    if not tag or not isinstance(tag, str):
-        print(format_red("Invalid tag. Please provide a valid tag string."))
-        return
 
     if not note_name:
         print(format_red("Note title cannot be empty."))
@@ -226,6 +228,13 @@ def handle_remove_tag(manager: NoteManager) -> None:
     note_list = manager.search_by_title(note_name)
     if not note_list:
         print(format_red("No notes found with the given title."))
+        return
+    
+    tag = input("Please, enter the tag name for removing: ").strip()
+
+    # Validate inputs
+    if not tag or not isinstance(tag, str):
+        print(format_red("Invalid tag. Please provide a valid tag string."))
         return
 
     for note in note_list:
@@ -301,8 +310,12 @@ def handle_add_note(manager: NoteManager) -> None:
     """
 
     title = input("Enter note title (required): ").strip()
-    contact = input("Enter contact name: ").strip()
-    content = input("Enter note content: ").strip()
+    contact = input("Enter contact name (required): ").strip()
+    content = input("Enter note content (required): ").strip()
+    new_tags_input = input(
+        "Enter tags, separated by commas (or press Enter to skip): "
+    ).strip()
+    new_tags = [tag.strip() for tag in new_tags_input.split(",") if tag.strip()]
 
     # Create a temporary note for validation
     temp_note = Note(
@@ -310,6 +323,7 @@ def handle_add_note(manager: NoteManager) -> None:
         title=title,
         contact=contact,
         content=content,
+        tags=new_tags
     )
 
     # Validate the note before adding it
@@ -367,7 +381,7 @@ def handle_search_notes(manager: NoteManager) -> None:
         try:
             results = search_method(query)
             if results:
-                print(format_red(f"Found {len(results)} note(s):"))
+                print(format_green(f"Found {len(results)} note(s):"))
                 _print_notes(results)
             else:
                 print(format_red("No notes found."))

@@ -96,6 +96,7 @@ class ContactManager:
         """
         for i, contact in enumerate(self.contacts):
             if contact.name == name:
+
                 # Validate the updated phone number and email
                 contact._validate_phone_number(updated_contact.phone_number)
                 contact._validate_email(updated_contact.email)

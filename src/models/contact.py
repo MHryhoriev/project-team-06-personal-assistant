@@ -101,14 +101,6 @@ class Contact:
         self._validate_phone_number(value)
         self.__phone_number = value
 
-        # try:
-        #     self._validate_phone_number(value)
-        #     self.__phone_number = value
-        # except ValueError as ex:
-        #     ex.handled = True
-        #     print(ex)
-        #     raise
-
     @property
     def email(self) -> str:
         """
@@ -151,6 +143,7 @@ class Contact:
         Args:
             value (str): The contact birthday.
         """
+        self._validate_birthday(value)
         self.__birthday = value
 
     def _validate_phone_number(self, phone_number: str) -> None:
@@ -167,9 +160,6 @@ class Contact:
             ValueError: If the phone number does not conform to the expected format.
         """
         from utils.exceptions import ValidationError
-
-        if not phone_number:
-            raise ValidationError(format_red("Phone number cannot be empty."))
 
         pattern = r"^(?:\+380|0)[\d]{9,12}$"  # Example pattern for Ukrainian numbers
         if not re.match(pattern, phone_number):
@@ -192,9 +182,6 @@ class Contact:
         """
         from utils.exceptions import ValidationError
 
-        if not email:
-            raise ValidationError(format_red("Email address cannot be empty."))
-
         pattern = r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"  # Updated pattern for email validation
         if not re.match(pattern, email):
             raise ValidationError(
@@ -207,23 +194,32 @@ class Contact:
 
         This method checks if the provided birthday string is in the correct format (DD.MM.YYYY),
         converts it to a `date` object, and ensures that the birthday is not in the future. If any
-        of these conditions fail, a `ValueError` is raised.
+        of these conditions fail, a `ValidationError` is raised.
 
         Args:
             birthday (str): The birthday in DD.MM.YYYY format to be validated.
 
         Raises:
-            ValueError: If the birthday is not a valid date or if it is in the future.
+            ValidationError: If the birthday is not a valid date or if it is in the future.
         """
-        try:
-            birthday_date = datetime.strptime(birthday, "%d.%m.%Y").date()
-        except ValueError:
-            raise ValueError(
+        from utils.exceptions import ValidationError
+
+        # Validate format using regular expression
+        pattern = r"^\d{2}\.\d{2}\.\d{4}$"
+        if not re.match(pattern, birthday):
+            raise ValidationError(
                 format_red(f"Invalid birthday format: {birthday}. Expected format: DD.MM.YYYY")
             )
-        
+
+        # Convert string to date
+        try:
+            birthday_date = datetime.strptime(birthday, "%d.%m.%Y").date()
+        except ValueError as ex:
+            raise ex
+
+        # Validate if the date is not in the future
         if birthday_date > date.today():
-            raise ValueError(format_red("Birthday cannot be in the future."))
+            raise ValidationError(format_red("Birthday cannot be in the future."))
 
     def to_dict(self) -> dict:
         """
@@ -235,4 +231,5 @@ class Contact:
         return asdict(self)
 
     def __str__(self) -> str:
-        return f"Name: {self.__name}, Address: {self.__address}, Phone: {self.__phone_number}, Email: {self.__email}, Birthday: {self.__birthday}"
+        return (f"ID: {self.id}, Name: {self.__name}, Address: {self.__address}, "
+                f"Phone: {self.__phone_number}, Email: {self.__email}, Birthday: {self.__birthday}")

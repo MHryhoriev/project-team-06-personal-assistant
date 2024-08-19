@@ -2,7 +2,7 @@ import os
 import json
 from typing import List, Optional, TypeVar, Generic
 from abc import ABC, abstractmethod
-from colors import format_red, format_yellow
+from colors import format_red, format_yellow, format_green
 
 # Define a TypeVar for the generic type
 T = TypeVar("T")
@@ -76,7 +76,7 @@ class Storage(Generic[T], ABC):
             self.__data_cache = self.__load_from_file()
         return self.__data_cache
     
-    def __ensure_directory_exists(file_path: str) -> None:
+    def __ensure_directory_exists(self, file_path: str) -> None:
         """
         Ensures that the directory for the given file path exists.
         If it does not exist, the directory is created.
@@ -87,9 +87,7 @@ class Storage(Generic[T], ABC):
         directory = os.path.dirname(file_path)
         if not os.path.exists(directory):
             os.makedirs(directory)
-            print(format_yellow(f"Directory created: {directory}"))
-        else:
-            print(format_red(f"Directory already exists: {directory}"))
+            print(format_green(f"Directory created: {directory}"))
 
     def save_data(self, data: List[T]) -> None:
         """
